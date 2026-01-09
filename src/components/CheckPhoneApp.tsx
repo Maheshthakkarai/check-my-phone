@@ -142,7 +142,7 @@ export default function CheckPhoneApp() {
                         initial={{ opacity: 0, x: -20 }}
                         animate={{ opacity: 1, x: 0 }}
                         transition={{ delay: 0.3 }}
-                        className="bg-slate-900/40 backdrop-blur-xl border border-slate-800 rounded-3xl p-5 md:p-8"
+                        className="bg-slate-900/40 backdrop-blur-xl border border-slate-800 rounded-3xl p-5 md:p-8 relative z-30"
                     >
                         <div className="flex items-center gap-3 mb-6 md:mb-8">
                             <div className="p-2 rounded-xl bg-blue-500/10 border border-blue-500/20">
@@ -226,7 +226,7 @@ export default function CheckPhoneApp() {
                         initial={{ opacity: 0, x: 20 }}
                         animate={{ opacity: 1, x: 0 }}
                         transition={{ delay: 0.4 }}
-                        className="bg-slate-900/40 backdrop-blur-xl border border-slate-800 rounded-3xl p-5 md:p-8"
+                        className="bg-slate-900/40 backdrop-blur-xl border border-slate-800 rounded-3xl p-5 md:p-8 relative z-20"
                     >
                         <div className="flex items-center gap-3 mb-6 md:mb-8">
                             <div className="p-2 rounded-xl bg-indigo-500/10 border border-indigo-500/20">
