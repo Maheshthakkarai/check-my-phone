@@ -3,13 +3,14 @@
 import React, { useState, useEffect, useMemo } from 'react';
 import { DataService } from '@/lib/dataService';
 import { Operator, Device, DeviceSpecification } from '@/lib/types';
-import { Search, Smartphone, Globe, Radio, CheckCircle2, XCircle, Info, Activity } from 'lucide-react';
+import { Search, Smartphone, Globe, Radio, CheckCircle2, XCircle, Info, Activity, Menu } from 'lucide-react';
 import { motion, AnimatePresence } from 'framer-motion';
 
 export default function CheckPhoneApp() {
     const [operators, setOperators] = useState<Operator[]>([]);
     const [devices, setDevices] = useState<Device[]>([]);
     const [loading, setLoading] = useState(true);
+    const [showAbout, setShowAbout] = useState(false);
 
     const [selectedCountry, setSelectedCountry] = useState('');
     const [selectedOperator, setSelectedOperator] = useState<Operator | null>(null);
@@ -110,14 +111,27 @@ export default function CheckPhoneApp() {
 
             <main className="relative z-10 max-w-5xl mx-auto px-4 py-12 md:py-20">
                 <header className="text-center mb-16">
-                    <motion.div
-                        initial={{ opacity: 0, y: -20 }}
-                        animate={{ opacity: 1, y: 0 }}
-                        className="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-blue-500/10 border border-blue-500/20 text-blue-400 text-sm font-medium mb-6"
-                    >
-                        <Activity className="w-4 h-4" />
-                        Zero Budget, Maximum Accuracy
-                    </motion.div>
+                    <div className="flex flex-col items-center gap-4 mb-6 md:mb-8">
+                        <motion.div
+                            initial={{ opacity: 0, y: -20 }}
+                            animate={{ opacity: 1, y: 0 }}
+                            className="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-blue-500/10 border border-blue-500/20 text-blue-400 text-xs md:text-sm font-medium"
+                        >
+                            <Activity className="w-4 h-4" />
+                            Global Real-Time Database
+                        </motion.div>
+
+                        <motion.button
+                            initial={{ opacity: 0 }}
+                            animate={{ opacity: 1 }}
+                            whileHover={{ scale: 1.05 }}
+                            whileTap={{ scale: 0.95 }}
+                            onClick={() => setShowAbout(true)}
+                            className="text-xs text-slate-400 hover:text-white flex items-center gap-1.5 transition-colors"
+                        >
+                            <Info className="w-4 h-4" /> About this App
+                        </motion.button>
+                    </div>
                     <motion.h1
                         initial={{ opacity: 0, y: -20 }}
                         animate={{ opacity: 1, y: 0 }}
@@ -375,6 +389,73 @@ export default function CheckPhoneApp() {
                     Check My Phone &copy; {new Date().getFullYear()} &bull; Open-source data via GSMA & FCC Public Records.
                 </p>
             </footer>
+
+            <AnimatePresence>
+                {showAbout && (
+                    <div className="fixed inset-0 z-[100] flex items-center justify-center p-4">
+                        <motion.div
+                            initial={{ opacity: 0 }}
+                            animate={{ opacity: 1 }}
+                            exit={{ opacity: 0 }}
+                            onClick={() => setShowAbout(false)}
+                            className="absolute inset-0 bg-black/60 backdrop-blur-sm"
+                        />
+                        <motion.div
+                            initial={{ opacity: 0, scale: 0.9, y: 20 }}
+                            animate={{ opacity: 1, scale: 1, y: 0 }}
+                            exit={{ opacity: 0, scale: 0.9, y: 20 }}
+                            className="relative bg-slate-900 border border-slate-800 w-full max-w-2xl max-h-[80vh] overflow-y-auto rounded-[2rem] p-6 md:p-10 shadow-2xl custom-scrollbar"
+                        >
+                            <button
+                                onClick={() => setShowAbout(false)}
+                                className="absolute top-6 right-6 p-2 rounded-full hover:bg-white/5 transition-colors"
+                            >
+                                <XCircle className="w-6 h-6 text-slate-500" />
+                            </button>
+
+                            <h2 className="text-3xl font-bold mb-6 bg-clip-text text-transparent bg-gradient-to-r from-blue-400 to-indigo-400">About Check My Phone</h2>
+
+                            <div className="space-y-6 text-slate-300">
+                                <section>
+                                    <h3 className="text-xl font-semibold text-white mb-2">The "Will it Work?" Solution</h3>
+                                    <p>Mobile frequencies are complicated—different countries and carriers use different "bands." Check My Phone removes the guesswork from global roaming by analyzing your specific hardware against over 2,000 mobile carriers worldwide.</p>
+                                </section>
+
+                                <section className="bg-blue-500/5 border border-blue-500/10 rounded-2xl p-5">
+                                    <h3 className="text-lg font-semibold text-blue-400 mb-2 flex items-center gap-2">
+                                        <Globe className="w-5 h-5" /> Why it’s essential for Travelers
+                                    </h3>
+                                    <ul className="list-disc list-inside space-y-2 text-sm">
+                                        <li><strong>Pre-travel Validation:</strong> Verify if your phone supports 4G/5G in your destination before you even pack.</li>
+                                        <li><strong>Avoid Dead Zones:</strong> Identify "Partial Support" to know if you'll experience slower speeds or patchy coverage.</li>
+                                        <li><strong>Confidence in Buying:</strong> Check if an international phone model will work on your home carrier.</li>
+                                    </ul>
+                                </section>
+
+                                <section className="grid sm:grid-cols-2 gap-4">
+                                    <div className="p-4 rounded-2xl bg-slate-950/50 border border-slate-800">
+                                        <h4 className="font-bold text-white mb-1">10,000+ Devices</h4>
+                                        <p className="text-xs text-slate-400">Comprehensive indexing from flagship iPhones to reliable budget models from the last 7 years.</p>
+                                    </div>
+                                    <div className="p-4 rounded-2xl bg-slate-950/50 border border-slate-800">
+                                        <h4 className="font-bold text-white mb-1">Real-Time Data</h4>
+                                        <p className="text-xs text-slate-400">Regularly updated carrier records ensuring accurate technical frequency mappings.</p>
+                                    </div>
+                                </section>
+
+                                <p className="text-sm italic text-slate-500 text-center pt-4">Built with accuracy and traveler freedom in mind.</p>
+
+                                <button
+                                    onClick={() => setShowAbout(false)}
+                                    className="w-full py-4 bg-gradient-to-r from-blue-600 to-indigo-600 rounded-2xl font-bold text-white hover:opacity-90 transition-opacity"
+                                >
+                                    Got it, thanks!
+                                </button>
+                            </div>
+                        </motion.div>
+                    </div>
+                )}
+            </AnimatePresence>
         </div>
     );
 }
