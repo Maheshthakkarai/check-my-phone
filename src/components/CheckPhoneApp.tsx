@@ -326,7 +326,7 @@ export default function CheckPhoneApp() {
                                             <option value="">Select Carrier...</option>
                                             {filteredOperators.map(o => (
                                                 <option key={`${o.mcc}-${o.mnc}`} value={o.operator}>
-                                                    {o.brand ? `${o.brand} (${o.operator})` : o.operator}
+                                                    {o.brand && o.brand.trim() !== o.operator.trim() && !o.operator.includes(o.brand) ? `${o.brand} (${o.operator})` : o.operator}
                                                 </option>
                                             ))}
                                         </select>

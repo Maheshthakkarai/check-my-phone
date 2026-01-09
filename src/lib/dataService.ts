@@ -71,9 +71,25 @@ export class DataService {
             let brand = op.brand || '';
             let name = op.operator || '';
 
-            if (brand.includes('Freedom Mobile') || name.includes('Freedom Mobile')) {
-                brand = 'Freedom Mobile';
-                name = 'Quebecor / Videotron'; // Correct current owner
+            if (op.countryName === 'Canada') {
+                const b = brand.toLowerCase();
+                const n = name.toLowerCase();
+                if (b.includes('videotron') || n.includes('videotron') || b.includes('vidéotron') || n.includes('vidéotron')) {
+                    brand = '';
+                    name = 'Videotron';
+                } else if (b.includes('freedom') || n.includes('freedom')) {
+                    brand = '';
+                    name = 'Freedom Mobile';
+                } else if (b.includes('rogers') || n.includes('rogers')) {
+                    brand = '';
+                    name = 'Rogers';
+                } else if (b.includes('bell') || n.includes('bell')) {
+                    brand = '';
+                    name = 'Bell';
+                } else if (b.includes('telus') || n.includes('telus')) {
+                    brand = '';
+                    name = 'Telus';
+                }
             }
 
             // 2. Formatting cleaner display names
@@ -106,7 +122,7 @@ export class DataService {
 
     static parseBands(bandString: string): string[] {
         if (!bandString) return [];
-        return bandString.split(/[\/,;]+/).map(b => b.trim()).filter(Boolean);
+        return bandString.split(/[\/,;]+/).map(b => b.trim()).filter(b => b && b !== 'Unknown');
     }
 
     // Common band mappings for matching different naming conventions
