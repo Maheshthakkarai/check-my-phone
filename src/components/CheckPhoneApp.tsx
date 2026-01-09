@@ -3,7 +3,7 @@
 import React, { useState, useEffect, useMemo } from 'react';
 import { DataService } from '@/lib/dataService';
 import { Operator, Device, DeviceSpecification } from '@/lib/types';
-import { Search, Smartphone, Globe, Radio, CheckCircle2, XCircle, Info, Activity, Menu } from 'lucide-react';
+import { Search, Smartphone, Globe, Radio, CheckCircle2, XCircle, Info, Activity, Menu, RotateCcw, HelpCircle } from 'lucide-react';
 import { motion, AnimatePresence } from 'framer-motion';
 
 export default function CheckPhoneApp() {
@@ -11,11 +11,19 @@ export default function CheckPhoneApp() {
     const [devices, setDevices] = useState<Device[]>([]);
     const [loading, setLoading] = useState(true);
     const [showAbout, setShowAbout] = useState(false);
+    const [showHelp, setShowHelp] = useState(false);
 
     const [selectedCountry, setSelectedCountry] = useState('');
     const [selectedOperator, setSelectedOperator] = useState<Operator | null>(null);
     const [deviceSearch, setDeviceSearch] = useState('');
     const [selectedDevice, setSelectedDevice] = useState<Device | null>(null);
+
+    const handleReset = () => {
+        setSelectedCountry('');
+        setSelectedOperator(null);
+        setDeviceSearch('');
+        setSelectedDevice(null);
+    };
 
     useEffect(() => {
         async function init() {
@@ -111,26 +119,50 @@ export default function CheckPhoneApp() {
 
             <main className="relative z-10 max-w-5xl mx-auto px-4 py-12 md:py-20">
                 <header className="text-center mb-16">
-                    <div className="flex flex-col items-center gap-4 mb-6 md:mb-8">
+                    <div className="flex flex-col items-center gap-6 mb-6 md:mb-10">
                         <motion.div
                             initial={{ opacity: 0, y: -20 }}
                             animate={{ opacity: 1, y: 0 }}
-                            className="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-blue-500/10 border border-blue-500/20 text-blue-400 text-xs md:text-sm font-medium"
+                            className="inline-flex items-center gap-2 px-4 py-1.5 rounded-full bg-blue-500/10 border border-blue-500/20 text-blue-400 text-xs md:text-sm font-medium"
                         >
                             <Activity className="w-4 h-4" />
                             Global Real-Time Database
                         </motion.div>
 
-                        <motion.button
-                            initial={{ opacity: 0 }}
-                            animate={{ opacity: 1 }}
-                            whileHover={{ scale: 1.05 }}
-                            whileTap={{ scale: 0.95 }}
-                            onClick={() => setShowAbout(true)}
-                            className="text-xs text-slate-400 hover:text-white flex items-center gap-1.5 transition-colors"
-                        >
-                            <Info className="w-4 h-4" /> About this App
-                        </motion.button>
+                        <div className="flex flex-wrap items-center justify-center gap-x-6 gap-y-4">
+                            <motion.button
+                                initial={{ opacity: 0 }}
+                                animate={{ opacity: 1 }}
+                                whileHover={{ scale: 1.05 }}
+                                whileTap={{ scale: 0.95 }}
+                                onClick={() => setShowAbout(true)}
+                                className="text-xs text-slate-400 hover:text-white flex items-center gap-2 transition-colors font-medium border-r border-slate-800 pr-6 last:border-0"
+                            >
+                                <Info className="w-4 h-4 text-blue-400" /> About
+                            </motion.button>
+
+                            <motion.button
+                                initial={{ opacity: 0 }}
+                                animate={{ opacity: 1 }}
+                                whileHover={{ scale: 1.05 }}
+                                whileTap={{ scale: 0.95 }}
+                                onClick={() => setShowHelp(true)}
+                                className="text-xs text-slate-400 hover:text-white flex items-center gap-2 transition-colors font-medium border-r border-slate-800 pr-6 last:border-0"
+                            >
+                                <HelpCircle className="w-4 h-4 text-indigo-400" /> Help
+                            </motion.button>
+
+                            <motion.button
+                                initial={{ opacity: 0 }}
+                                animate={{ opacity: 1 }}
+                                whileHover={{ scale: 1.05, color: '#f8fafc' }}
+                                whileTap={{ scale: 0.95 }}
+                                onClick={handleReset}
+                                className="text-xs text-slate-400 hover:text-white flex items-center gap-2 transition-colors font-medium"
+                            >
+                                <RotateCcw className="w-4 h-4 text-red-400" /> Reset All
+                            </motion.button>
+                        </div>
                     </div>
                     <motion.h1
                         initial={{ opacity: 0, y: -20 }}
@@ -460,6 +492,76 @@ export default function CheckPhoneApp() {
                                     className="w-full py-4 bg-gradient-to-r from-blue-600 to-indigo-600 rounded-2xl font-bold text-white hover:opacity-90 transition-opacity"
                                 >
                                     Got it, thanks!
+                                </button>
+                            </div>
+                        </motion.div>
+                    </div>
+                )}
+            </AnimatePresence>
+
+            <AnimatePresence>
+                {showHelp && (
+                    <div className="fixed inset-0 z-[100] flex items-center justify-center p-4">
+                        <motion.div
+                            initial={{ opacity: 0 }}
+                            animate={{ opacity: 1 }}
+                            exit={{ opacity: 0 }}
+                            onClick={() => setShowHelp(false)}
+                            className="absolute inset-0 bg-black/60 backdrop-blur-sm"
+                        />
+                        <motion.div
+                            initial={{ opacity: 0, scale: 0.9, y: 20 }}
+                            animate={{ opacity: 1, scale: 1, y: 0 }}
+                            exit={{ opacity: 0, scale: 0.9, y: 20 }}
+                            className="relative bg-slate-900 border border-slate-800 w-full max-w-md rounded-[2.5rem] p-8 md:p-10 shadow-2xl"
+                        >
+                            <button
+                                onClick={() => setShowHelp(false)}
+                                className="absolute top-6 right-6 p-2 rounded-full hover:bg-white/5 transition-colors"
+                            >
+                                <XCircle className="w-6 h-6 text-slate-500" />
+                            </button>
+
+                            <h2 className="text-2xl font-bold mb-8 flex items-center gap-3">
+                                <HelpCircle className="w-6 h-6 text-indigo-400" />
+                                How to Use
+                            </h2>
+
+                            <div className="space-y-6">
+                                <div className="flex gap-4">
+                                    <div className="flex-shrink-0 w-8 h-8 rounded-full bg-blue-500/10 border border-blue-500/20 flex items-center justify-center text-blue-400 font-bold text-sm">1</div>
+                                    <div>
+                                        <p className="font-semibold text-white mb-1">Search Your Phone</p>
+                                        <p className="text-sm text-slate-400">Type your phone's name (e.g., "iPhone 15") and select it from the list.</p>
+                                    </div>
+                                </div>
+
+                                <div className="flex gap-4">
+                                    <div className="flex-shrink-0 w-8 h-8 rounded-full bg-indigo-500/10 border border-indigo-500/20 flex items-center justify-center text-indigo-400 font-bold text-sm">2</div>
+                                    <div>
+                                        <p className="font-semibold text-white mb-1">Pick a Destination</p>
+                                        <p className="text-sm text-slate-400">Select the country you are visiting and your preferred local carrier.</p>
+                                    </div>
+                                </div>
+
+                                <div className="flex gap-4">
+                                    <div className="flex-shrink-0 w-8 h-8 rounded-full bg-green-500/10 border border-green-500/20 flex items-center justify-center text-green-400 font-bold text-sm">3</div>
+                                    <div>
+                                        <p className="font-semibold text-white mb-1">Check Compatibility</p>
+                                        <p className="text-sm text-slate-400">Instantly see if your phone supports the carrier's network bands.</p>
+                                    </div>
+                                </div>
+
+                                <div className="mt-8 p-4 rounded-2xl bg-amber-500/5 border border-amber-500/10 flex gap-3 text-xs text-amber-200/60 leading-relaxed">
+                                    <Info className="w-4 h-4 flex-shrink-0" />
+                                    <span>Tip: If your phone isn't listed, use the GSMArena search button in the search results.</span>
+                                </div>
+
+                                <button
+                                    onClick={() => setShowHelp(false)}
+                                    className="w-full mt-4 py-4 bg-slate-800 hover:bg-slate-700 rounded-2xl font-bold text-white transition-colors"
+                                >
+                                    Start Checking
                                 </button>
                             </div>
                         </motion.div>
