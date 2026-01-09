@@ -122,7 +122,7 @@ export default function CheckPhoneApp() {
                         initial={{ opacity: 0, y: -20 }}
                         animate={{ opacity: 1, y: 0 }}
                         transition={{ delay: 0.1 }}
-                        className="text-5xl md:text-7xl font-bold bg-clip-text text-transparent bg-gradient-to-b from-white to-slate-400 mb-6 tracking-tight"
+                        className="text-4xl md:text-7xl font-bold bg-clip-text text-transparent bg-gradient-to-b from-white to-slate-400 mb-4 md:mb-6 tracking-tight"
                     >
                         Check My Phone
                     </motion.h1>
@@ -130,33 +130,33 @@ export default function CheckPhoneApp() {
                         initial={{ opacity: 0, y: -20 }}
                         animate={{ opacity: 1, y: 0 }}
                         transition={{ delay: 0.2 }}
-                        className="text-slate-400 text-lg md:text-xl max-w-2xl mx-auto"
+                        className="text-slate-400 text-base md:text-xl max-w-2xl mx-auto px-4"
                     >
                         Instantly determine if your device supports the network bands of any carrier worldwide.
                     </motion.p>
                 </header>
 
-                <div className="grid md:grid-cols-2 gap-8">
+                <div className="grid md:grid-cols-2 gap-4 md:gap-8">
                     {/* Step 1: Device Selection */}
                     <motion.section
                         initial={{ opacity: 0, x: -20 }}
                         animate={{ opacity: 1, x: 0 }}
                         transition={{ delay: 0.3 }}
-                        className="bg-slate-900/40 backdrop-blur-xl border border-slate-800 rounded-3xl p-8"
+                        className="bg-slate-900/40 backdrop-blur-xl border border-slate-800 rounded-3xl p-5 md:p-8"
                     >
-                        <div className="flex items-center gap-3 mb-8">
-                            <div className="p-2.5 rounded-xl bg-blue-500/10 border border-blue-500/20">
-                                <Smartphone className="w-6 h-6 text-blue-400" />
+                        <div className="flex items-center gap-3 mb-6 md:mb-8">
+                            <div className="p-2 rounded-xl bg-blue-500/10 border border-blue-500/20">
+                                <Smartphone className="w-5 h-5 md:w-6 md:h-6 text-blue-400" />
                             </div>
-                            <h2 className="text-2xl font-semibold">Your Device</h2>
+                            <h2 className="text-xl md:text-2xl font-semibold">Your Device</h2>
                         </div>
 
-                        <div className="relative mb-6">
+                        <div className="relative mb-4 md:mb-6">
                             <Search className="absolute left-4 top-1/2 -translate-y-1/2 w-5 h-5 text-slate-500" />
                             <input
                                 type="text"
-                                placeholder="Search Make/Model (e.g. iPhone 13, S21...)"
-                                className="w-full bg-slate-950/50 border border-slate-800 rounded-2xl py-4 pl-12 pr-4 outline-none focus:border-blue-500/50 transition-all text-white placeholder:text-slate-600"
+                                placeholder="Search Make/Model..."
+                                className="w-full bg-slate-950/50 border border-slate-800 rounded-2xl py-3.5 md:py-4 pl-12 pr-4 outline-none focus:border-blue-500/50 transition-all text-white placeholder:text-slate-600 text-sm md:text-base"
                                 value={deviceSearch}
                                 onChange={(e) => {
                                     setDeviceSearch(e.target.value);
@@ -226,20 +226,20 @@ export default function CheckPhoneApp() {
                         initial={{ opacity: 0, x: 20 }}
                         animate={{ opacity: 1, x: 0 }}
                         transition={{ delay: 0.4 }}
-                        className="bg-slate-900/40 backdrop-blur-xl border border-slate-800 rounded-3xl p-8"
+                        className="bg-slate-900/40 backdrop-blur-xl border border-slate-800 rounded-3xl p-5 md:p-8"
                     >
-                        <div className="flex items-center gap-3 mb-8">
-                            <div className="p-2.5 rounded-xl bg-indigo-500/10 border border-indigo-500/20">
-                                <Globe className="w-6 h-6 text-indigo-400" />
+                        <div className="flex items-center gap-3 mb-6 md:mb-8">
+                            <div className="p-2 rounded-xl bg-indigo-500/10 border border-indigo-500/20">
+                                <Globe className="w-5 h-5 md:w-6 md:h-6 text-indigo-400" />
                             </div>
-                            <h2 className="text-2xl font-semibold">Carrier Location</h2>
+                            <h2 className="text-xl md:text-2xl font-semibold">Carrier Location</h2>
                         </div>
 
                         <div className="space-y-4">
                             <div>
-                                <label className="block text-xs font-bold text-slate-500 uppercase tracking-widest mb-2 ml-1">Destination Country</label>
+                                <label className="block text-[10px] md:text-xs font-bold text-slate-500 uppercase tracking-widest mb-2 ml-1">Destination Country</label>
                                 <select
-                                    className="w-full bg-slate-950/50 border border-slate-800 rounded-2xl py-4 px-4 outline-none focus:border-indigo-500/50 transition-all text-white appearance-none"
+                                    className="w-full bg-slate-950/50 border border-slate-800 rounded-2xl py-3.5 md:py-4 px-4 outline-none focus:border-indigo-500/50 transition-all text-white appearance-none text-sm md:text-base"
                                     value={selectedCountry}
                                     onChange={(e) => {
                                         setSelectedCountry(e.target.value);
@@ -258,9 +258,9 @@ export default function CheckPhoneApp() {
                                         animate={{ opacity: 1, height: 'auto' }}
                                         exit={{ opacity: 0, height: 0 }}
                                     >
-                                        <label className="block text-xs font-bold text-slate-500 uppercase tracking-widest mb-2 ml-1">Local Carrier</label>
+                                        <label className="block text-[10px] md:text-xs font-bold text-slate-500 uppercase tracking-widest mb-2 ml-1">Local Carrier</label>
                                         <select
-                                            className="w-full bg-slate-950/50 border border-slate-800 rounded-2xl py-4 px-4 outline-none focus:border-indigo-500/50 transition-all text-white appearance-none"
+                                            className="w-full bg-slate-950/50 border border-slate-800 rounded-2xl py-3.5 md:py-4 px-4 outline-none focus:border-indigo-500/50 transition-all text-white appearance-none text-sm md:text-base"
                                             value={selectedOperator?.operator || ''}
                                             onChange={(e) => {
                                                 const op = filteredOperators.find(o => o.operator === e.target.value);
@@ -288,22 +288,22 @@ export default function CheckPhoneApp() {
                             initial={{ opacity: 0, y: 40 }}
                             animate={{ opacity: 1, y: 0 }}
                             exit={{ opacity: 0, y: 40 }}
-                            className="mt-12"
+                            className="mt-8 md:mt-12"
                         >
-                            <div className="bg-gradient-to-br from-slate-900 to-slate-950 border border-slate-800 rounded-[2.5rem] p-8 md:p-12 overflow-hidden relative">
-                                <div className="absolute top-0 right-0 p-12 opacity-5">
+                            <div className="bg-gradient-to-br from-slate-900 to-slate-950 border border-slate-800 rounded-[2rem] md:rounded-[2.5rem] p-6 md:p-12 overflow-hidden relative">
+                                <div className="absolute top-0 right-0 p-12 opacity-5 hidden md:block">
                                     <Radio className="w-64 h-64 rotate-12" />
                                 </div>
 
                                 <div className="relative z-10">
-                                    <div className="flex flex-col md:flex-row md:items-center justify-between gap-6 mb-12">
+                                    <div className="flex flex-col md:flex-row md:items-center justify-between gap-4 md:gap-6 mb-8 md:mb-12">
                                         <div>
-                                            <h3 className="text-3xl font-bold mb-2">Network Compatibility Report</h3>
-                                            <p className="text-slate-400">Analysis for {selectedDevice?.name} on {selectedOperator?.brand || selectedOperator?.operator}</p>
+                                            <h3 className="text-2xl md:text-3xl font-bold mb-1 md:mb-2">Compatibility Report</h3>
+                                            <p className="text-slate-400 text-sm md:text-base">Analysis for {selectedDevice?.name} on {selectedOperator?.brand || selectedOperator?.operator}</p>
                                         </div>
-                                        <div className="flex items-center gap-2 px-6 py-3 rounded-2xl bg-white/5 border border-white/10 backdrop-blur-md">
-                                            <span className="text-slate-400 text-sm">Overall Status</span>
-                                            <span className={`font-bold px-3 py-1 rounded-lg text-sm ${compatibility.missing.length === 0 ? 'bg-green-500/20 text-green-400' : 'bg-amber-500/20 text-amber-400'}`}>
+                                        <div className="flex items-center gap-2 px-4 md:px-6 py-2 md:py-3 rounded-2xl bg-white/5 border border-white/10 backdrop-blur-md w-fit">
+                                            <span className="text-slate-400 text-xs md:text-sm">Status</span>
+                                            <span className={`font-bold px-2 md:px-3 py-0.5 md:py-1 rounded-lg text-xs md:text-sm ${compatibility.missing.length === 0 ? 'bg-green-500/20 text-green-400' : 'bg-amber-500/20 text-amber-400'}`}>
                                                 {compatibility.missing.length === 0 ? 'Full Support' : 'Partial Support'}
                                             </span>
                                         </div>
