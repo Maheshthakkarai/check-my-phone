@@ -201,8 +201,18 @@ export default function CheckPhoneApp() {
                                                 </button>
                                             ))
                                         ) : (
-                                            <div className="px-6 py-4 text-slate-500 text-sm italic">
-                                                No devices found matching "{deviceSearch}"
+                                            <div className="px-6 py-6 text-center space-y-4">
+                                                <p className="text-slate-500 text-sm italic">
+                                                    No devices found matching "{deviceSearch}"
+                                                </p>
+                                                <a
+                                                    href={`https://www.gsmarena.com/res.php3?sSearch=${encodeURIComponent(deviceSearch)}`}
+                                                    target="_blank"
+                                                    rel="noopener noreferrer"
+                                                    className="inline-flex items-center gap-2 px-4 py-2 rounded-xl bg-white/5 border border-white/10 text-xs font-bold text-slate-400 hover:text-white hover:bg-white/10 transition-all uppercase tracking-widest"
+                                                >
+                                                    <Search className="w-3.5 h-3.5" /> Search on GSMArena
+                                                </a>
                                             </div>
                                         )}
                                     </motion.div>
