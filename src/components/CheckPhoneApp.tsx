@@ -128,7 +128,20 @@ export default function CheckPhoneApp() {
         if (!selectedDevice || !selectedOperator || !compatibility) return;
 
         const status = compatibility.missing.length === 0 ? "✅ Full Support" : "⚠️ Partial Support";
-        const text = `Checked my ${selectedDevice.name} for ${selectedOperator.brand || selectedOperator.operator} in ${selectedCountry}: ${status}. Check your phone's compatibility at check-my-phone.vercel.app`;
+        const supportedCount = compatibility.supported.length;
+        const missingCount = compatibility.missing.length;
+
+        const text = `📱 Check My Phone Report
+-----------------------
+Device: ${selectedDevice.name}
+Carrier: ${selectedOperator.brand || selectedOperator.operator} (${selectedOperator.mcc}-${selectedOperator.mnc})
+Country: ${selectedCountry}
+
+${status}
+📶 Bands: ${supportedCount} Supported / ${missingCount} Missing
+${compatibility.missing.length > 0 ? `❌ Missing: ${compatibility.missing.join(', ')}` : '✨ Perfect Match!'}
+
+Check your phone at: check-my-phone.vercel.app`;
 
         try {
             await navigator.clipboard.writeText(text);
