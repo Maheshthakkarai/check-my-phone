@@ -14,6 +14,7 @@ export default function CheckPhoneApp() {
     const [showHelp, setShowHelp] = useState(false);
 
     const [selectedCountry, setSelectedCountry] = useState('');
+    const [countrySearch, setCountrySearch] = useState('');
     const [selectedOperator, setSelectedOperator] = useState<Operator | null>(null);
     const [deviceSearch, setDeviceSearch] = useState('');
     const [debouncedSearch, setDebouncedSearch] = useState('');
@@ -29,6 +30,7 @@ export default function CheckPhoneApp() {
 
     const handleReset = () => {
         setSelectedCountry('');
+        setCountrySearch('');
         setSelectedOperator(null);
         setDeviceSearch('');
         setDebouncedSearch('');
@@ -52,6 +54,17 @@ export default function CheckPhoneApp() {
     }, []);
 
     const countries = useMemo(() => DataService.getCountries(operators), [operators]);
+
+    const filteredCountries = useMemo(() => {
+        if (!countrySearch) return [];
+        const query = countrySearch.toLowerCase().trim();
+        return countries.filter(c => c.toLowerCase().includes(query)).slice(0, 50);
+    }, [countries, countrySearch]);
+
+    const alphabets = useMemo(() => {
+        const unique = new Set(countries.map(c => c[0].toUpperCase()));
+        return Array.from(unique).sort();
+    }, [countries]);
 
     const filteredOperators = useMemo(() =>
         selectedCountry ? DataService.getOperatorsByCountry(operators, selectedCountry) : []
@@ -315,19 +328,71 @@ export default function CheckPhoneApp() {
                         </div>
 
                         <div className="space-y-4">
-                            <div>
+                            <div className="relative">
                                 <label className="block text-[10px] md:text-xs font-bold text-slate-500 uppercase tracking-widest mb-2 ml-1">Destination Country</label>
-                                <select
-                                    className="w-full bg-slate-950/50 border border-slate-800 rounded-2xl py-3.5 md:py-4 px-4 outline-none focus:border-indigo-500/50 transition-all text-white appearance-none text-sm md:text-base"
-                                    value={selectedCountry}
-                                    onChange={(e) => {
-                                        setSelectedCountry(e.target.value);
-                                        setSelectedOperator(null);
-                                    }}
-                                >
-                                    <option value="">Select Country...</option>
-                                    {countries.map(c => <option key={c} value={c}>{c}</option>)}
-                                </select>
+                                <div className="relative">
+                                    <Search className="absolute left-4 top-1/2 -translate-y-1/2 w-4 h-4 text-slate-500" />
+                                    <input
+                                        type="text"
+                                        placeholder="Type Country Name..."
+                                        className="w-full bg-slate-950/50 border border-slate-800 rounded-2xl py-3.5 md:py-4 pl-11 pr-4 outline-none focus:border-indigo-500/50 transition-all text-white placeholder:text-slate-600 text-sm md:text-base"
+                                        value={countrySearch}
+                                        onChange={(e) => {
+                                            setCountrySearch(e.target.value);
+                                            if (selectedCountry) setSelectedCountry('');
+                                        }}
+                                        onFocus={() => {
+                                            if (selectedCountry) {
+                                                setCountrySearch('');
+                                                setSelectedCountry('');
+                                            }
+                                        }}
+                                    />
+                                </div>
+
+                                <AnimatePresence>
+                                    {!selectedCountry && (
+                                        <motion.div
+                                            initial={{ opacity: 0, y: 10 }}
+                                            animate={{ opacity: 1, y: 0 }}
+                                            exit={{ opacity: 0, y: 10 }}
+                                            className="absolute top-full left-0 right-0 mt-2 bg-slate-900 border border-slate-800 rounded-2xl overflow-hidden z-[60] shadow-2xl max-h-72 flex flex-col"
+                                        >
+                                            <div className="p-3 bg-slate-950/50 border-b border-slate-800 flex flex-wrap gap-1 items-center justify-center">
+                                                {alphabets.map(char => (
+                                                    <button
+                                                        key={char}
+                                                        onClick={() => setCountrySearch(char)}
+                                                        className={`w-7 h-7 flex items-center justify-center rounded-lg text-[10px] font-bold transition-colors ${countrySearch.toUpperCase() === char ? 'bg-indigo-500 text-white' : 'bg-slate-800 text-slate-400 hover:bg-slate-700'}`}
+                                                    >
+                                                        {char}
+                                                    </button>
+                                                ))}
+                                            </div>
+                                            <div className="overflow-y-auto custom-scrollbar">
+                                                {(countrySearch ? filteredCountries : countries).map(c => (
+                                                    <button
+                                                        key={c}
+                                                        onClick={() => {
+                                                            setSelectedCountry(c);
+                                                            setCountrySearch(c);
+                                                            setSelectedOperator(null);
+                                                        }}
+                                                        className="w-full px-6 py-3 text-left hover:bg-indigo-500/10 transition-colors flex items-center justify-between group border-b border-slate-800 last:border-0"
+                                                    >
+                                                        <span className="text-sm font-medium">{c}</span>
+                                                        <span className="text-[10px] text-slate-500 group-hover:text-indigo-400 uppercase tracking-widest font-bold">Select</span>
+                                                    </button>
+                                                ))}
+                                                {countrySearch && filteredCountries.length === 0 && (
+                                                    <div className="px-6 py-8 text-center text-slate-500 text-sm italic">
+                                                        No countries found matching &quot;{countrySearch}&quot;
+                                                    </div>
+                                                )}
+                                            </div>
+                                        </motion.div>
+                                    )}
+                                </AnimatePresence>
                             </div>
 
                             <AnimatePresence>
@@ -338,21 +403,24 @@ export default function CheckPhoneApp() {
                                         exit={{ opacity: 0, height: 0 }}
                                     >
                                         <label className="block text-[10px] md:text-xs font-bold text-slate-500 uppercase tracking-widest mb-2 ml-1">Local Carrier</label>
-                                        <select
-                                            className="w-full bg-slate-950/50 border border-slate-800 rounded-2xl py-3.5 md:py-4 px-4 outline-none focus:border-indigo-500/50 transition-all text-white appearance-none text-sm md:text-base"
-                                            value={selectedOperator?.uniqueId || ''}
-                                            onChange={(e) => {
-                                                const op = filteredOperators.find(o => o.uniqueId === e.target.value);
-                                                setSelectedOperator(op || null);
-                                            }}
-                                        >
-                                            <option value="">Select Carrier...</option>
-                                            {filteredOperators.map(o => (
-                                                <option key={o.uniqueId} value={o.uniqueId}>
-                                                    {o.brand && o.brand.trim() !== o.operator.trim() && !o.operator.includes(o.brand) ? `${o.brand} (${o.operator})` : o.operator}
-                                                </option>
-                                            ))}
-                                        </select>
+                                        <div className="relative">
+                                            <Radio className="absolute left-4 top-1/2 -translate-y-1/2 w-4 h-4 text-slate-500" />
+                                            <select
+                                                className="w-full bg-slate-950/50 border border-slate-800 rounded-2xl py-3.5 md:py-4 pl-11 pr-4 outline-none focus:border-indigo-500/50 transition-all text-white appearance-none text-sm md:text-base"
+                                                value={selectedOperator?.uniqueId || ''}
+                                                onChange={(e) => {
+                                                    const op = filteredOperators.find(o => o.uniqueId === e.target.value);
+                                                    setSelectedOperator(op || null);
+                                                }}
+                                            >
+                                                <option value="">Select Carrier...</option>
+                                                {filteredOperators.map(o => (
+                                                    <option key={o.uniqueId} value={o.uniqueId}>
+                                                        {o.brand && o.brand.trim() !== o.operator.trim() && !o.operator.includes(o.brand) ? `${o.brand} (${o.operator})` : o.operator}
+                                                    </option>
+                                                ))}
+                                            </select>
+                                        </div>
                                     </motion.div>
                                 )}
                             </AnimatePresence>
