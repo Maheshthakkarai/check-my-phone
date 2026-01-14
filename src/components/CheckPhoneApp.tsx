@@ -19,6 +19,7 @@ export default function CheckPhoneApp() {
     const [deviceSearch, setDeviceSearch] = useState('');
     const [debouncedSearch, setDebouncedSearch] = useState('');
     const [selectedDevice, setSelectedDevice] = useState<Device | null>(null);
+    const [isSharing, setIsSharing] = useState(false);
 
     // Debounce search input to prevent lag during typing
     useEffect(() => {
@@ -116,6 +117,27 @@ export default function CheckPhoneApp() {
 
         return DataService.checkCompatibility(devBandsList, opBands);
     }, [selectedDevice, selectedOperator]);
+
+    const hasEsim = useMemo(() => {
+        if (!selectedDevice) return false;
+        const specs = selectedDevice.specifications.toLowerCase();
+        return specs.includes('esim') || specs.includes('embedded-sim');
+    }, [selectedDevice]);
+
+    const handleShare = async () => {
+        if (!selectedDevice || !selectedOperator || !compatibility) return;
+
+        const status = compatibility.missing.length === 0 ? "✅ Full Support" : "⚠️ Partial Support";
+        const text = `Checked my ${selectedDevice.name} for ${selectedOperator.brand || selectedOperator.operator} in ${selectedCountry}: ${status}. Check your phone's compatibility at check-my-phone.vercel.app`;
+
+        try {
+            await navigator.clipboard.writeText(text);
+            setIsSharing(true);
+            setTimeout(() => setIsSharing(false), 2000);
+        } catch (err) {
+            console.error("Failed to copy", err);
+        }
+    };
 
     if (loading) {
         return (
@@ -295,8 +317,15 @@ export default function CheckPhoneApp() {
                                 className="p-4 rounded-2xl bg-blue-500/5 border border-blue-500/10"
                             >
                                 <div className="flex justify-between items-start">
-                                    <div>
-                                        <h3 className="font-bold text-blue-400">{selectedDevice.name}</h3>
+                                    <div className="flex flex-col">
+                                        <div className="flex items-center gap-2">
+                                            <h3 className="font-bold text-blue-400">{selectedDevice.name}</h3>
+                                            {hasEsim && (
+                                                <span className="px-2 py-0.5 rounded-full bg-green-500/20 border border-green-500/30 text-[10px] font-bold text-green-400 uppercase tracking-widest flex items-center gap-1">
+                                                    <CheckCircle2 className="w-2.5 h-2.5" /> eSIM Ready
+                                                </span>
+                                            )}
+                                        </div>
                                         <p className="text-xs text-slate-500 mt-1 uppercase tracking-tight">Technical Profile Active</p>
                                     </div>
                                     <button
@@ -453,11 +482,23 @@ export default function CheckPhoneApp() {
                                                 Analysis for {selectedDevice?.name} on {selectedOperator?.brand || selectedOperator?.operator} ({selectedOperator?.mcc}-{selectedOperator?.mnc})
                                             </p>
                                         </div>
-                                        <div className="flex items-center gap-2 px-4 md:px-6 py-2 md:py-3 rounded-2xl bg-white/5 border border-white/10 backdrop-blur-md w-fit">
-                                            <span className="text-slate-400 text-xs md:text-sm">Status</span>
-                                            <span className={`font-bold px-2 md:px-3 py-0.5 md:py-1 rounded-lg text-xs md:text-sm ${compatibility.missing.length === 0 ? 'bg-green-500/20 text-green-400' : 'bg-amber-500/20 text-amber-400'}`}>
-                                                {compatibility.missing.length === 0 ? 'Full Support' : 'Partial Support'}
-                                            </span>
+                                        <div className="flex flex-col md:flex-row md:items-center gap-4">
+                                            <div className="flex items-center gap-2 px-4 md:px-6 py-2 md:py-3 rounded-2xl bg-white/5 border border-white/10 backdrop-blur-md w-fit">
+                                                <span className="text-slate-400 text-xs md:text-sm">Status</span>
+                                                <span className={`font-bold px-2 md:px-3 py-0.5 md:py-1 rounded-lg text-xs md:text-sm ${compatibility.missing.length === 0 ? 'bg-green-500/20 text-green-400' : 'bg-amber-500/20 text-amber-400'}`}>
+                                                    {compatibility.missing.length === 0 ? 'Full Support' : 'Partial Support'}
+                                                </span>
+                                            </div>
+                                            <button
+                                                onClick={handleShare}
+                                                className={`flex items-center gap-2 px-5 py-2.5 md:py-3 rounded-2xl transition-all font-bold text-xs md:text-sm uppercase tracking-widest ${isSharing ? 'bg-green-500 text-white' : 'bg-blue-600 hover:bg-blue-500 text-white shadow-lg shadow-blue-500/20'}`}
+                                            >
+                                                {isSharing ? (
+                                                    <><CheckCircle2 className="w-4 h-4" /> Copied!</>
+                                                ) : (
+                                                    <><RotateCcw className="w-4 h-4" /> Share Report</>
+                                                )}
+                                            </button>
                                         </div>
                                     </div>
 
