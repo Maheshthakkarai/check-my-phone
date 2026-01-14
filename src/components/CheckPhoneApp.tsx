@@ -61,6 +61,12 @@ export default function CheckPhoneApp() {
     const filteredCountries = useMemo(() => {
         if (!countrySearch) return [];
         const query = countrySearch.toLowerCase().trim();
+
+        // Improved Logic: If single character (like from Alphabet chips), match strictly by start
+        if (query.length === 1) {
+            return countries.filter(c => c && c.toLowerCase().startsWith(query));
+        }
+
         return countries.filter(c => c && c.toLowerCase().includes(query)).slice(0, 50);
     }, [countries, countrySearch]);
 
