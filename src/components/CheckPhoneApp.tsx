@@ -58,11 +58,11 @@ export default function CheckPhoneApp() {
     const filteredCountries = useMemo(() => {
         if (!countrySearch) return [];
         const query = countrySearch.toLowerCase().trim();
-        return countries.filter(c => c.toLowerCase().includes(query)).slice(0, 50);
+        return countries.filter(c => c && c.toLowerCase().includes(query)).slice(0, 50);
     }, [countries, countrySearch]);
 
     const alphabets = useMemo(() => {
-        const unique = new Set(countries.map(c => c[0].toUpperCase()));
+        const unique = new Set(countries.filter(c => c && c.length > 0).map(c => c[0].toUpperCase()));
         return Array.from(unique).sort();
     }, [countries]);
 
