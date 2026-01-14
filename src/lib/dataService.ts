@@ -99,16 +99,15 @@ export class DataService {
             }
 
             // Formatting cleaner display names and using uniqueId to prevent jumping
+            // We use a broader merge key: brand + name + bands to remove true duplicates
+            const mergeKey = `${brand}-${name}-${op.bands}`.toLowerCase().replace(/\s+/g, '');
             const uid = `${op.mcc}-${op.mnc}-${brand}-${name}`.toLowerCase().replace(/\s+/g, '');
 
-            if (uniqueOps.has(uid)) {
-                // Merge bands
-                const existing = uniqueOps.get(uid)!;
-                if (op.bands && !existing.bands?.includes(op.bands)) {
-                    existing.bands = existing.bands ? `${existing.bands} / ${op.bands}` : op.bands;
-                }
+            if (uniqueOps.has(mergeKey)) {
+                // If we have an exact match for name + bands, we don't need another entry
+                // Just keep the first one we find
             } else {
-                uniqueOps.set(uid, { ...op, uniqueId: uid, brand, operator: name });
+                uniqueOps.set(mergeKey, { ...op, uniqueId: uid, brand, operator: name });
             }
         });
 

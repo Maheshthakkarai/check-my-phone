@@ -414,11 +414,14 @@ export default function CheckPhoneApp() {
                                                 }}
                                             >
                                                 <option value="">Select Carrier...</option>
-                                                {filteredOperators.map(o => (
-                                                    <option key={o.uniqueId} value={o.uniqueId}>
-                                                        {o.brand && o.brand.trim() !== o.operator.trim() && !o.operator.includes(o.brand) ? `${o.brand} (${o.operator})` : o.operator}
-                                                    </option>
-                                                ))}
+                                                {filteredOperators.map(o => {
+                                                    const displayName = o.brand && o.brand.trim() !== o.operator.trim() && !o.operator.includes(o.brand) ? `${o.brand} (${o.operator})` : o.operator;
+                                                    return (
+                                                        <option key={o.uniqueId} value={o.uniqueId}>
+                                                            {displayName} ({o.mcc}-{o.mnc})
+                                                        </option>
+                                                    );
+                                                })}
                                             </select>
                                         </div>
                                     </motion.div>
@@ -446,7 +449,9 @@ export default function CheckPhoneApp() {
                                     <div className="flex flex-col md:flex-row md:items-center justify-between gap-4 md:gap-6 mb-8 md:mb-12">
                                         <div>
                                             <h3 className="text-2xl md:text-3xl font-bold mb-1 md:mb-2">Compatibility Report</h3>
-                                            <p className="text-slate-400 text-sm md:text-base">Analysis for {selectedDevice?.name} on {selectedOperator?.brand || selectedOperator?.operator}</p>
+                                            <p className="text-slate-400 text-sm md:text-base">
+                                                Analysis for {selectedDevice?.name} on {selectedOperator?.brand || selectedOperator?.operator} ({selectedOperator?.mcc}-{selectedOperator?.mnc})
+                                            </p>
                                         </div>
                                         <div className="flex items-center gap-2 px-4 md:px-6 py-2 md:py-3 rounded-2xl bg-white/5 border border-white/10 backdrop-blur-md w-fit">
                                             <span className="text-slate-400 text-xs md:text-sm">Status</span>
