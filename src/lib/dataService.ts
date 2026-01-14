@@ -1,4 +1,4 @@
-import { Operator, Device, DeviceSpecification } from './types';
+import { Operator, Device } from './types';
 
 const CARRIERS_URL = 'https://raw.githubusercontent.com/pbakondy/mcc-mnc-list/master/mcc-mnc-list.json';
 const DEVICES_URL = 'https://raw.githubusercontent.com/ilyasozkurt/mobilephone-brands-and-models/master/devices.json';
@@ -10,7 +10,7 @@ export class DataService {
     static async fetchOperators(): Promise<Operator[]> {
         if (this.operators.length > 0) return this.operators;
         try {
-            const response = await fetch(CARRIERS_URL);
+            const response = await fetch(CARRIERS_URL, { cache: 'no-store' });
             this.operators = await response.json();
             return this.operators;
         } catch (error) {
@@ -29,16 +29,22 @@ export class DataService {
                 const data = await localRes.json();
                 localDevices = data.RECORDS || [];
             }
-        } catch (e) {
+        } catch {
             console.warn('Local curated list not available');
         }
 
         try {
-            const response = await fetch(DEVICES_URL);
+            const response = await fetch(DEVICES_URL, { cache: 'no-store' });
             const data = await response.json();
-            const externalDevices = data.RECORDS || [];
+            const externalDevices = (data.RECORDS || []).map((d: Device) => ({
+                ...d,
+                normalizedName: d.name.toLowerCase().replace(/\s+/g, '')
+            }));
 
-            this.devices = [...localDevices];
+            this.devices = localDevices.map(d => ({
+                ...d,
+                normalizedName: d.name.toLowerCase().replace(/\s+/g, '')
+            }));
             const deviceNames = new Set(this.devices.map(d => d.name.toLowerCase()));
 
             externalDevices.forEach((d: Device) => {
@@ -63,14 +69,14 @@ export class DataService {
     static getOperatorsByCountry(operators: Operator[], country: string): Operator[] {
         const countryOps = operators.filter(o => o.countryName === country && o.status === 'Operational');
 
-        // Map for deduplication (Key: Brand + Operator name)
+        // Map for deduplication (Key: unique identifier)
         const uniqueOps = new Map<string, Operator>();
 
         countryOps.forEach(op => {
-            // 1. Data Patching (Fix known incorrect ownership/names)
             let brand = op.brand || '';
             let name = op.operator || '';
 
+            // Patch for Canada known operators
             if (op.countryName === 'Canada') {
                 const b = brand.toLowerCase();
                 const n = name.toLowerCase();
@@ -92,24 +98,46 @@ export class DataService {
                 }
             }
 
-            // 2. Formatting cleaner display names
-            const key = `${brand}|${name}`.toLowerCase().trim();
+            // Formatting cleaner display names and using uniqueId to prevent jumping
+            const uid = `${op.mcc}-${op.mnc}-${brand}-${name}`.toLowerCase().replace(/\s+/g, '');
 
-            if (uniqueOps.has(key)) {
-                // Merge bands instead of creating duplicate entry
-                const existing = uniqueOps.get(key)!;
+            if (uniqueOps.has(uid)) {
+                // Merge bands
+                const existing = uniqueOps.get(uid)!;
                 if (op.bands && !existing.bands?.includes(op.bands)) {
                     existing.bands = existing.bands ? `${existing.bands} / ${op.bands}` : op.bands;
                 }
             } else {
-                uniqueOps.set(key, { ...op, brand, operator: name });
+                uniqueOps.set(uid, { ...op, uniqueId: uid, brand, operator: name });
             }
         });
 
+        // Add virtual/missing carriers for Canada
+        if (country === 'Canada') {
+            const rogers = Array.from(uniqueOps.values()).find(o => o.operator === 'Rogers');
+            const bell = Array.from(uniqueOps.values()).find(o => o.operator === 'Bell');
+            const telus = Array.from(uniqueOps.values()).find(o => o.operator === 'Telus');
+
+            if (rogers && !uniqueOps.has('fido')) {
+                uniqueOps.set('fido', { ...rogers, uniqueId: 'fido', operator: 'Fido', brand: 'Fido' });
+            }
+            if (telus && !uniqueOps.has('koodo')) {
+                uniqueOps.set('koodo', { ...telus, uniqueId: 'koodo', operator: 'Koodo', brand: 'Koodo' });
+            }
+            if (telus && !uniqueOps.has('public-mobile')) {
+                uniqueOps.set('public-mobile', { ...telus, uniqueId: 'public-mobile', operator: 'Public Mobile', brand: 'Public Mobile' });
+            }
+            if (bell && !uniqueOps.has('virgin-plus')) {
+                uniqueOps.set('virgin-plus', { ...bell, uniqueId: 'virgin-plus', operator: 'Virgin Plus', brand: 'Virgin Plus' });
+            }
+        }
+
         // Convert back to sorted array
-        return Array.from(uniqueOps.values()).sort((a, b) =>
-            (a.brand || a.operator).localeCompare(b.brand || b.operator)
-        );
+        return Array.from(uniqueOps.values()).sort((a, b) => {
+            const nameA = (a.brand || a.operator).toLowerCase();
+            const nameB = (b.brand || b.operator).toLowerCase();
+            return nameA.localeCompare(nameB);
+        });
     }
 
     static getBrands(devices: Device[]): string[] {

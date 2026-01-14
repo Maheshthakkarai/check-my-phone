@@ -3,7 +3,7 @@
 import React, { useState, useEffect, useMemo } from 'react';
 import { DataService } from '@/lib/dataService';
 import { Operator, Device, DeviceSpecification } from '@/lib/types';
-import { Search, Smartphone, Globe, Radio, CheckCircle2, XCircle, Info, Activity, Menu, RotateCcw, HelpCircle } from 'lucide-react';
+import { Search, Smartphone, Globe, Radio, CheckCircle2, XCircle, Info, Activity, RotateCcw, HelpCircle } from 'lucide-react';
 import { motion, AnimatePresence } from 'framer-motion';
 
 export default function CheckPhoneApp() {
@@ -16,12 +16,22 @@ export default function CheckPhoneApp() {
     const [selectedCountry, setSelectedCountry] = useState('');
     const [selectedOperator, setSelectedOperator] = useState<Operator | null>(null);
     const [deviceSearch, setDeviceSearch] = useState('');
+    const [debouncedSearch, setDebouncedSearch] = useState('');
     const [selectedDevice, setSelectedDevice] = useState<Device | null>(null);
+
+    // Debounce search input to prevent lag during typing
+    useEffect(() => {
+        const timer = setTimeout(() => {
+            setDebouncedSearch(deviceSearch);
+        }, 300);
+        return () => clearTimeout(timer);
+    }, [deviceSearch]);
 
     const handleReset = () => {
         setSelectedCountry('');
         setSelectedOperator(null);
         setDeviceSearch('');
+        setDebouncedSearch('');
         setSelectedDevice(null);
     };
 
@@ -48,12 +58,13 @@ export default function CheckPhoneApp() {
         , [operators, selectedCountry]);
 
     const searchedDevices = useMemo(() => {
-        if (deviceSearch.length < 2) return [];
+        if (debouncedSearch.length < 2) return [];
 
-        const query = deviceSearch.toLowerCase().replace(/\s+/g, '');
+        const query = debouncedSearch.toLowerCase().replace(/\s+/g, '');
 
         const matches = devices.filter(d => {
-            const name = d.name.toLowerCase().replace(/\s+/g, '');
+            // Use pre-normalized name for maximum speed
+            const name = d.normalizedName || d.name.toLowerCase().replace(/\s+/g, '');
             return name.includes(query);
         });
 
@@ -65,7 +76,7 @@ export default function CheckPhoneApp() {
             if (!aIsCurated && bIsCurated) return 1;
             return 0;
         }).slice(0, 15);
-    }, [devices, deviceSearch]);
+    }, [devices, debouncedSearch]);
 
     const compatibility = useMemo(() => {
         if (!selectedDevice || !selectedOperator) return null;
@@ -218,13 +229,25 @@ export default function CheckPhoneApp() {
                                         exit={{ opacity: 0, y: 10 }}
                                         className="absolute top-full left-0 right-0 mt-2 bg-slate-900 border border-slate-800 rounded-2xl overflow-hidden z-50 shadow-2xl max-h-60 overflow-y-auto"
                                     >
-                                        {searchedDevices.length > 0 ? (
+                                        {deviceSearch !== debouncedSearch ? (
+                                            <div className="px-6 py-8 text-center">
+                                                <motion.div
+                                                    animate={{ rotate: 360 }}
+                                                    transition={{ duration: 1, repeat: Infinity, ease: "linear" }}
+                                                    className="inline-block mb-2"
+                                                >
+                                                    <Activity className="w-5 h-5 text-blue-500" />
+                                                </motion.div>
+                                                <p className="text-slate-500 text-sm">Searching global database...</p>
+                                            </div>
+                                        ) : searchedDevices.length > 0 ? (
                                             searchedDevices.map(d => (
                                                 <button
                                                     key={d.id}
                                                     onClick={() => {
                                                         setSelectedDevice(d);
                                                         setDeviceSearch(d.name);
+                                                        setDebouncedSearch(d.name);
                                                     }}
                                                     className="w-full px-6 py-3.5 text-left hover:bg-blue-500/10 transition-colors flex items-center justify-between group border-b border-slate-800 last:border-0"
                                                 >
@@ -235,7 +258,7 @@ export default function CheckPhoneApp() {
                                         ) : (
                                             <div className="px-6 py-6 text-center space-y-4">
                                                 <p className="text-slate-500 text-sm italic">
-                                                    No devices found matching "{deviceSearch}"
+                                                    No devices found matching &quot;{deviceSearch}&quot;
                                                 </p>
                                                 <a
                                                     href={`https://www.gsmarena.com/res.php3?sSearch=${encodeURIComponent(deviceSearch)}`}
@@ -317,15 +340,15 @@ export default function CheckPhoneApp() {
                                         <label className="block text-[10px] md:text-xs font-bold text-slate-500 uppercase tracking-widest mb-2 ml-1">Local Carrier</label>
                                         <select
                                             className="w-full bg-slate-950/50 border border-slate-800 rounded-2xl py-3.5 md:py-4 px-4 outline-none focus:border-indigo-500/50 transition-all text-white appearance-none text-sm md:text-base"
-                                            value={selectedOperator?.operator || ''}
+                                            value={selectedOperator?.uniqueId || ''}
                                             onChange={(e) => {
-                                                const op = filteredOperators.find(o => o.operator === e.target.value);
+                                                const op = filteredOperators.find(o => o.uniqueId === e.target.value);
                                                 setSelectedOperator(op || null);
                                             }}
                                         >
                                             <option value="">Select Carrier...</option>
                                             {filteredOperators.map(o => (
-                                                <option key={`${o.mcc}-${o.mnc}`} value={o.operator}>
+                                                <option key={o.uniqueId} value={o.uniqueId}>
                                                     {o.brand && o.brand.trim() !== o.operator.trim() && !o.operator.includes(o.brand) ? `${o.brand} (${o.operator})` : o.operator}
                                                 </option>
                                             ))}
@@ -459,8 +482,8 @@ export default function CheckPhoneApp() {
 
                             <div className="space-y-6 text-slate-300">
                                 <section>
-                                    <h3 className="text-xl font-semibold text-white mb-2">The "Will it Work?" Solution</h3>
-                                    <p>Mobile frequencies are complicated—different countries and carriers use different "bands." Check My Phone removes the guesswork from global roaming by analyzing your specific hardware against over 2,000 mobile carriers worldwide.</p>
+                                    <h3 className="text-xl font-semibold text-white mb-2">The &quot;Will it Work?&quot; Solution</h3>
+                                    <p>Mobile frequencies are complicated—different countries and carriers use different &quot;bands.&quot; Check My Phone removes the guesswork from global roaming by analyzing your specific hardware against over 2,000 mobile carriers worldwide.</p>
                                 </section>
 
                                 <section className="bg-blue-500/5 border border-blue-500/10 rounded-2xl p-5">
@@ -469,7 +492,7 @@ export default function CheckPhoneApp() {
                                     </h3>
                                     <ul className="list-disc list-inside space-y-2 text-sm">
                                         <li><strong>Pre-travel Validation:</strong> Verify if your phone supports 4G/5G in your destination before you even pack.</li>
-                                        <li><strong>Avoid Dead Zones:</strong> Identify "Partial Support" to know if you'll experience slower speeds or patchy coverage.</li>
+                                        <li><strong>Avoid Dead Zones:</strong> Identify &quot;Partial Support&quot; to know if you&apos;ll experience slower speeds or patchy coverage.</li>
                                         <li><strong>Confidence in Buying:</strong> Check if an international phone model will work on your home carrier.</li>
                                     </ul>
                                 </section>
@@ -532,7 +555,7 @@ export default function CheckPhoneApp() {
                                     <div className="flex-shrink-0 w-8 h-8 rounded-full bg-blue-500/10 border border-blue-500/20 flex items-center justify-center text-blue-400 font-bold text-sm">1</div>
                                     <div>
                                         <p className="font-semibold text-white mb-1">Search Your Phone</p>
-                                        <p className="text-sm text-slate-400">Type your phone's name (e.g., "iPhone 15") and select it from the list.</p>
+                                        <p className="text-sm text-slate-400">Type your phone&apos;s name (e.g., &quot;iPhone 15&quot;) and select it from the list.</p>
                                     </div>
                                 </div>
 
@@ -548,13 +571,13 @@ export default function CheckPhoneApp() {
                                     <div className="flex-shrink-0 w-8 h-8 rounded-full bg-green-500/10 border border-green-500/20 flex items-center justify-center text-green-400 font-bold text-sm">3</div>
                                     <div>
                                         <p className="font-semibold text-white mb-1">Check Compatibility</p>
-                                        <p className="text-sm text-slate-400">Instantly see if your phone supports the carrier's network bands.</p>
+                                        <p className="text-sm text-slate-400">Instantly see if your phone supports the carrier&apos;s network bands.</p>
                                     </div>
                                 </div>
 
                                 <div className="mt-8 p-4 rounded-2xl bg-amber-500/5 border border-amber-500/10 flex gap-3 text-xs text-amber-200/60 leading-relaxed">
                                     <Info className="w-4 h-4 flex-shrink-0" />
-                                    <span>Tip: If your phone isn't listed, use the GSMArena search button in the search results.</span>
+                                    <span>Tip: If your phone isn&apos;t listed, use the GSMArena search button in the search results.</span>
                                 </div>
 
                                 <button

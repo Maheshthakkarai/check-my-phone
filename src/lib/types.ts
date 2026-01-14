@@ -1,4 +1,5 @@
 export interface Operator {
+  uniqueId: string; // Combined MCC-MNC or brand-name
   countryName: string;
   countryCode: string;
   mcc: string;
@@ -18,13 +19,14 @@ export interface DeviceSpecification {
   "5G bands"?: string;
   GPRS?: string;
   EDGE?: string;
-  [key: string]: any;
+  [key: string]: string | undefined;
 }
 
 export interface Device {
   id: string;
   brand_id: string;
   name: string;
+  normalizedName?: string;
   specifications: string; // JSON string of DeviceSpecification
 }
 
