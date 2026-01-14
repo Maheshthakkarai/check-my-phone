@@ -20,6 +20,7 @@ export default function CheckPhoneApp() {
     const [debouncedSearch, setDebouncedSearch] = useState('');
     const [selectedDevice, setSelectedDevice] = useState<Device | null>(null);
     const [isSharing, setIsSharing] = useState(false);
+    const [filterType, setFilterType] = useState<'all' | 'esim' | 'satellite'>('all'); // Filter state
 
     // Debounce search input to prevent lag during typing
     useEffect(() => {
@@ -36,6 +37,7 @@ export default function CheckPhoneApp() {
         setDeviceSearch('');
         setDebouncedSearch('');
         setSelectedDevice(null);
+        setFilterType('all');
     };
 
     useEffect(() => {
@@ -72,15 +74,30 @@ export default function CheckPhoneApp() {
         , [operators, selectedCountry]);
 
     const searchedDevices = useMemo(() => {
-        if (debouncedSearch.length < 2) return [];
+        // If filter is active, allow searching even with empty input (to show all Satellite/eSIM devices)
+        if (filterType === 'all' && debouncedSearch.length < 2) return [];
 
         const query = debouncedSearch.toLowerCase().replace(/\s+/g, '');
 
-        const matches = devices.filter(d => {
-            // Use pre-normalized name for maximum speed
-            const name = d.normalizedName || d.name.toLowerCase().replace(/\s+/g, '');
-            return name.includes(query);
-        });
+        let matches = devices;
+
+        // Apply Capability Filter
+        if (filterType === 'esim') {
+            matches = matches.filter(d => d.specifications.toLowerCase().includes('esim'));
+        } else if (filterType === 'satellite') {
+            matches = matches.filter(d => d.specifications.toLowerCase().includes('satellite'));
+        }
+
+        // Apply Text Search
+        if (debouncedSearch.length > 0) {
+            matches = matches.filter(d => {
+                const name = d.normalizedName || d.name.toLowerCase().replace(/\s+/g, '');
+                return name.includes(query);
+            });
+        }
+
+        // If filtering by type, we can show more results
+        const limit = filterType !== 'all' ? 50 : 15;
 
         // Prioritize curated devices (those with IDs like 'ip16p' etc)
         return matches.sort((a, b) => {
@@ -89,8 +106,8 @@ export default function CheckPhoneApp() {
             if (aIsCurated && !bIsCurated) return -1;
             if (!aIsCurated && bIsCurated) return 1;
             return 0;
-        }).slice(0, 15);
-    }, [devices, debouncedSearch]);
+        }).slice(0, limit);
+    }, [devices, debouncedSearch, filterType]);
 
     const compatibility = useMemo(() => {
         if (!selectedDevice || !selectedOperator) return null;
@@ -139,7 +156,8 @@ Country: ${selectedCountry}
 
 ${status}
 📶 Bands: ${supportedCount} Supported / ${missingCount} Missing
-${compatibility.missing.length > 0 ? `❌ Missing: ${compatibility.missing.join(', ')}` : '✨ Perfect Match!'}
+✅ Supported: ${compatibility.supported.join(', ') || 'None'}
+${compatibility.missing.length > 0 ? `❌ Missing: ${compatibility.missing.join(', ')}` : '✨ All operator bands supported!'}
 
 Check your phone at: check-my-phone.vercel.app`;
 
@@ -256,11 +274,42 @@ Check your phone at: check-my-phone.vercel.app`;
                             <h2 className="text-xl md:text-2xl font-semibold">Your Device</h2>
                         </div>
 
+                        <div className="flex gap-2 mb-4">
+                            <button
+                                onClick={() => setFilterType('all')}
+                                className={`px-3 py-1.5 rounded-lg text-xs font-bold uppercase tracking-widest transition-all ${filterType === 'all'
+                                    ? 'bg-blue-500 text-white shadow-lg shadow-blue-500/25'
+                                    : 'bg-slate-800 text-slate-400 hover:bg-slate-700'}`}
+                            >
+                                All
+                            </button>
+                            <button
+                                onClick={() => setFilterType('esim')}
+                                className={`px-3 py-1.5 rounded-lg text-xs font-bold uppercase tracking-widest transition-all flex items-center gap-1.5 ${filterType === 'esim'
+                                    ? 'bg-green-500 text-white shadow-lg shadow-green-500/25'
+                                    : 'bg-slate-800 text-slate-400 hover:bg-slate-700'}`}
+                            >
+                                <CheckCircle2 className="w-3 h-3" /> eSIM
+                            </button>
+                            <button
+                                onClick={() => setFilterType('satellite')}
+                                className={`px-3 py-1.5 rounded-lg text-xs font-bold uppercase tracking-widest transition-all flex items-center gap-1.5 ${filterType === 'satellite'
+                                    ? 'bg-sky-500 text-white shadow-lg shadow-sky-500/25'
+                                    : 'bg-slate-800 text-slate-400 hover:bg-slate-700'}`}
+                            >
+                                <Radio className="w-3 h-3" /> Satellite
+                            </button>
+                        </div>
+
                         <div className="relative mb-4 md:mb-6">
                             <Search className="absolute left-4 top-1/2 -translate-y-1/2 w-5 h-5 text-slate-500" />
                             <input
                                 type="text"
-                                placeholder="Search Make/Model..."
+                                placeholder={
+                                    filterType === 'esim' ? "Search eSIM Devices..." :
+                                        filterType === 'satellite' ? "Search Satellite Phones..." :
+                                            "Search Make/Model..."
+                                }
                                 className="w-full bg-slate-950/50 border border-slate-800 rounded-2xl py-3.5 md:py-4 pl-12 pr-4 outline-none focus:border-blue-500/50 transition-all text-white placeholder:text-slate-600 text-sm md:text-base"
                                 value={deviceSearch}
                                 onChange={(e) => {
@@ -270,7 +319,7 @@ Check your phone at: check-my-phone.vercel.app`;
                             />
 
                             <AnimatePresence>
-                                {deviceSearch.length >= 2 && !selectedDevice && (
+                                {(deviceSearch.length >= 2 || filterType !== 'all') && !selectedDevice && deviceSearch.length > 0 && (
                                     <motion.div
                                         initial={{ opacity: 0, y: 10 }}
                                         animate={{ opacity: 1, y: 0 }}
@@ -300,13 +349,20 @@ Check your phone at: check-my-phone.vercel.app`;
                                                     className="w-full px-6 py-3.5 text-left hover:bg-blue-500/10 transition-colors flex items-center justify-between group border-b border-slate-800 last:border-0"
                                                 >
                                                     <span className="font-medium">{d.name}</span>
-                                                    <span className="text-xs text-slate-500 group-hover:text-blue-400 uppercase tracking-widest font-bold">Select</span>
+                                                    <div className="flex gap-2">
+                                                        {d.specifications.toLowerCase().includes('esim') && filterType !== 'esim' && (
+                                                            <span className="text-[10px] bg-green-500/10 text-green-500 px-1.5 py-0.5 rounded border border-green-500/20 font-bold uppercase">eSIM</span>
+                                                        )}
+                                                        {d.specifications.toLowerCase().includes('satellite') && filterType !== 'satellite' && (
+                                                            <span className="text-[10px] bg-sky-500/10 text-sky-500 px-1.5 py-0.5 rounded border border-sky-500/20 font-bold uppercase">Sat</span>
+                                                        )}
+                                                    </div>
                                                 </button>
                                             ))
                                         ) : (
                                             <div className="px-6 py-6 text-center space-y-4">
                                                 <p className="text-slate-500 text-sm italic">
-                                                    No devices found matching &quot;{deviceSearch}&quot;
+                                                    No {filterType !== 'all' ? filterType : ''} devices found matching &quot;{deviceSearch}&quot;
                                                 </p>
                                                 <a
                                                     href={`https://www.gsmarena.com/res.php3?sSearch=${encodeURIComponent(deviceSearch)}`}
@@ -333,11 +389,18 @@ Check your phone at: check-my-phone.vercel.app`;
                                     <div className="flex flex-col">
                                         <div className="flex items-center gap-2">
                                             <h3 className="font-bold text-blue-400">{selectedDevice.name}</h3>
-                                            {hasEsim && (
-                                                <span className="px-2 py-0.5 rounded-full bg-green-500/20 border border-green-500/30 text-[10px] font-bold text-green-400 uppercase tracking-widest flex items-center gap-1">
-                                                    <CheckCircle2 className="w-2.5 h-2.5" /> eSIM Ready
-                                                </span>
-                                            )}
+                                            <div className="flex gap-2">
+                                                {hasEsim && (
+                                                    <span className="px-2 py-0.5 rounded-full bg-green-500/20 border border-green-500/30 text-[10px] font-bold text-green-400 uppercase tracking-widest flex items-center gap-1">
+                                                        <CheckCircle2 className="w-2.5 h-2.5" /> eSIM Ready
+                                                    </span>
+                                                )}
+                                                {selectedDevice.specifications.toLowerCase().includes('satellite') && (
+                                                    <span className="px-2 py-0.5 rounded-full bg-sky-500/20 border border-sky-500/30 text-[10px] font-bold text-sky-400 uppercase tracking-widest flex items-center gap-1">
+                                                        <Radio className="w-2.5 h-2.5" /> Satellite
+                                                    </span>
+                                                )}
+                                            </div>
                                         </div>
                                         <p className="text-xs text-slate-500 mt-1 uppercase tracking-tight">Technical Profile Active</p>
                                     </div>
