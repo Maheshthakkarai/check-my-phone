@@ -10,7 +10,7 @@ export class DataService {
     static async fetchOperators(): Promise<Operator[]> {
         if (this.operators.length > 0) return this.operators;
         try {
-            const response = await fetch(CARRIERS_URL, { cache: 'no-store' });
+            const response = await fetch(CARRIERS_URL);
             this.operators = await response.json();
             return this.operators;
         } catch (error) {
@@ -34,7 +34,7 @@ export class DataService {
         }
 
         try {
-            const response = await fetch(DEVICES_URL, { cache: 'no-store' });
+            const response = await fetch(DEVICES_URL);
             const data = await response.json();
             const externalDevices = (data.RECORDS || []).map((d: Device) => ({
                 ...d,

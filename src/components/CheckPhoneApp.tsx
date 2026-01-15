@@ -20,7 +20,9 @@ export default function CheckPhoneApp() {
     const [debouncedSearch, setDebouncedSearch] = useState('');
     const [selectedDevice, setSelectedDevice] = useState<Device | null>(null);
     const [isSharing, setIsSharing] = useState(false);
-    const [filterType, setFilterType] = useState<'all' | 'esim' | 'satellite'>('all'); // Filter state
+    const [filterType, setFilterType] = useState<'all' | 'esim_only' | 'esim' | 'satellite'>('all'); // Filter state
+
+    const [selectedBrand, setSelectedBrand] = useState('');
 
     // Debounce search input to prevent lag during typing
     useEffect(() => {
@@ -38,6 +40,7 @@ export default function CheckPhoneApp() {
         setDebouncedSearch('');
         setSelectedDevice(null);
         setFilterType('all');
+        setSelectedBrand('');
     };
 
     useEffect(() => {
@@ -56,7 +59,9 @@ export default function CheckPhoneApp() {
         init();
     }, []);
 
+
     const countries = useMemo(() => DataService.getCountries(operators), [operators]);
+    const brands = useMemo(() => DataService.getBrands(devices), [devices]);
 
     const filteredCountries = useMemo(() => {
         if (!countrySearch) return [];
@@ -80,16 +85,26 @@ export default function CheckPhoneApp() {
         , [operators, selectedCountry]);
 
     const searchedDevices = useMemo(() => {
-        // If filter is active, allow searching even with empty input (to show all Satellite/eSIM devices)
-        if (filterType === 'all' && debouncedSearch.length < 2) return [];
+        // If no text search, no brand selected, and filter is 'all', show nothing
+        if (filterType === 'all' && !selectedBrand && debouncedSearch.length < 2) return [];
 
         const query = debouncedSearch.toLowerCase().replace(/\s+/g, '');
 
         let matches = devices;
 
+        // Apply Brand Filter
+        if (selectedBrand) {
+            matches = matches.filter(d => d.name.toLowerCase().startsWith(selectedBrand.toLowerCase()));
+        }
+
         // Apply Capability Filter
         if (filterType === 'esim') {
-            matches = matches.filter(d => d.specifications.toLowerCase().includes('esim'));
+            matches = matches.filter(d => {
+                const specs = d.specifications.toLowerCase();
+                return (specs.includes('esim') || specs.includes('embedded-sim')) && !specs.includes('esim only');
+            });
+        } else if (filterType === 'esim_only') {
+            matches = matches.filter(d => d.specifications.toLowerCase().includes('esim only'));
         } else if (filterType === 'satellite') {
             matches = matches.filter(d => d.specifications.toLowerCase().includes('satellite'));
         }
@@ -102,8 +117,8 @@ export default function CheckPhoneApp() {
             });
         }
 
-        // If filtering by type, we can show more results
-        const limit = filterType !== 'all' ? 50 : 15;
+        // If filtering by type or brand, we can show more results
+        const limit = (filterType !== 'all' || selectedBrand) ? 100 : 15;
 
         // Prioritize curated devices (those with IDs like 'ip16p' etc)
         return matches.sort((a, b) => {
@@ -113,7 +128,7 @@ export default function CheckPhoneApp() {
             if (!aIsCurated && bIsCurated) return 1;
             return 0;
         }).slice(0, limit);
-    }, [devices, debouncedSearch, filterType]);
+    }, [devices, debouncedSearch, filterType, selectedBrand]);
 
     const compatibility = useMemo(() => {
         if (!selectedDevice || !selectedOperator) return null;
@@ -141,10 +156,12 @@ export default function CheckPhoneApp() {
         return DataService.checkCompatibility(devBandsList, opBands);
     }, [selectedDevice, selectedOperator]);
 
-    const hasEsim = useMemo(() => {
-        if (!selectedDevice) return false;
+    const simInfo = useMemo(() => {
+        if (!selectedDevice) return { hasEsim: false, isEsimOnly: false };
         const specs = selectedDevice.specifications.toLowerCase();
-        return specs.includes('esim') || specs.includes('embedded-sim');
+        const isEsimOnly = specs.includes('esim only');
+        const hasEsim = specs.includes('esim') || specs.includes('embedded-sim');
+        return { hasEsim, isEsimOnly };
     }, [selectedDevice]);
 
     const handleShare = async () => {
@@ -154,9 +171,14 @@ export default function CheckPhoneApp() {
         const supportedCount = compatibility.supported.length;
         const missingCount = compatibility.missing.length;
 
+        let simStatus = "⚪ Physical SIM";
+        if (simInfo.isEsimOnly) simStatus = "🟣 eSIM Only";
+        else if (simInfo.hasEsim) simStatus = "🟢 eSIM Ready";
+
         const text = `📱 Check My Phone Report
 -----------------------
 Device: ${selectedDevice.name}
+SIM Type: ${simStatus}
 Carrier: ${selectedOperator.brand || selectedOperator.operator} (${selectedOperator.mcc}-${selectedOperator.mnc})
 Country: ${selectedCountry}
 
@@ -251,7 +273,7 @@ Check your phone at: check-my-phone.vercel.app`;
                         initial={{ opacity: 0, y: -20 }}
                         animate={{ opacity: 1, y: 0 }}
                         transition={{ delay: 0.1 }}
-                        className="text-4xl md:text-7xl font-bold bg-clip-text text-transparent bg-gradient-to-b from-white to-slate-400 mb-4 md:mb-6 tracking-tight"
+                        className="text-4xl md:text-7xl font-bold bg-clip-text text-transparent bg-gradient-to-b from-white to-slate-400 mb-4 md:mb-6 tracking-tight pb-2"
                     >
                         Check My Phone
                     </motion.h1>
@@ -290,6 +312,14 @@ Check your phone at: check-my-phone.vercel.app`;
                                 All
                             </button>
                             <button
+                                onClick={() => setFilterType('esim_only')}
+                                className={`px-3 py-1.5 rounded-lg text-xs font-bold uppercase tracking-widest transition-all flex items-center gap-1.5 ${filterType === 'esim_only'
+                                    ? 'bg-purple-500 text-white shadow-lg shadow-purple-500/25'
+                                    : 'bg-slate-800 text-slate-400 hover:bg-slate-700'}`}
+                            >
+                                <Smartphone className="w-3 h-3" /> eSIM Only
+                            </button>
+                            <button
                                 onClick={() => setFilterType('esim')}
                                 className={`px-3 py-1.5 rounded-lg text-xs font-bold uppercase tracking-widest transition-all flex items-center gap-1.5 ${filterType === 'esim'
                                     ? 'bg-green-500 text-white shadow-lg shadow-green-500/25'
@@ -307,30 +337,60 @@ Check your phone at: check-my-phone.vercel.app`;
                             </button>
                         </div>
 
-                        <div className="relative mb-4 md:mb-6">
-                            <Search className="absolute left-4 top-1/2 -translate-y-1/2 w-5 h-5 text-slate-500" />
-                            <input
-                                type="text"
-                                placeholder={
-                                    filterType === 'esim' ? "Search eSIM Devices..." :
-                                        filterType === 'satellite' ? "Search Satellite Phones..." :
-                                            "Search Make/Model..."
-                                }
-                                className="w-full bg-slate-950/50 border border-slate-800 rounded-2xl py-3.5 md:py-4 pl-12 pr-4 outline-none focus:border-blue-500/50 transition-all text-white placeholder:text-slate-600 text-sm md:text-base"
-                                value={deviceSearch}
-                                onChange={(e) => {
-                                    setDeviceSearch(e.target.value);
-                                    if (selectedDevice) setSelectedDevice(null);
-                                }}
-                            />
 
+
+                        <div className="flex gap-4 mb-4">
+                            <div className="relative w-1/3 min-w-[120px]">
+                                <select
+                                    className="w-full bg-slate-950/50 border border-slate-800 rounded-2xl py-3.5 pl-4 pr-8 outline-none focus:border-blue-500/50 transition-all text-white appearance-none text-xs md:text-sm font-medium"
+                                    value={selectedBrand}
+                                    onChange={(e) => {
+                                        setSelectedBrand(e.target.value);
+                                        setDeviceSearch(''); // Clear text search when switching brands
+                                        setSelectedDevice(null);
+                                    }}
+                                >
+                                    <option value="">All Brands</option>
+                                    {brands.map(brand => (
+                                        <option key={brand} value={brand}>{brand}</option>
+                                    ))}
+                                </select>
+                                <div className="absolute right-3 top-1/2 -translate-y-1/2 pointer-events-none text-slate-500">
+                                    <svg width="10" height="6" viewBox="0 0 10 6" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+                                        <path d="M1 1L5 5L9 1" />
+                                    </svg>
+                                </div>
+                            </div>
+
+                            <div className="relative w-2/3">
+                                <Search className="absolute left-4 top-1/2 -translate-y-1/2 w-5 h-5 text-slate-500" />
+                                <input
+                                    type="text"
+                                    placeholder={
+                                        filterType === 'esim_only' ? "Search eSIM Only..." :
+                                            filterType === 'esim' ? "Search eSIM..." :
+                                                filterType === 'satellite' ? "Search Satellite..." :
+                                                    selectedBrand ? `Search ${selectedBrand}...` :
+                                                        "Search Model..."
+                                    }
+                                    className="w-full bg-slate-950/50 border border-slate-800 rounded-2xl py-3.5 pl-12 pr-4 outline-none focus:border-blue-500/50 transition-all text-white placeholder:text-slate-600 text-sm md:text-base"
+                                    value={deviceSearch}
+                                    onChange={(e) => {
+                                        setDeviceSearch(e.target.value);
+                                        if (selectedDevice) setSelectedDevice(null);
+                                    }}
+                                />
+                            </div>
+                        </div>
+
+                        <div className="relative mb-4 md:mb-6">
                             <AnimatePresence>
-                                {(deviceSearch.length >= 2 || filterType !== 'all') && !selectedDevice && deviceSearch.length > 0 && (
+                                {(deviceSearch.length >= 2 || filterType !== 'all' || selectedBrand !== '') && !selectedDevice && (
                                     <motion.div
                                         initial={{ opacity: 0, y: 10 }}
                                         animate={{ opacity: 1, y: 0 }}
                                         exit={{ opacity: 0, y: 10 }}
-                                        className="absolute top-full left-0 right-0 mt-2 bg-slate-900 border border-slate-800 rounded-2xl overflow-hidden z-50 shadow-2xl max-h-60 overflow-y-auto"
+                                        className="absolute top-0 left-0 right-0 bg-slate-900 border border-slate-800 rounded-2xl overflow-hidden z-50 shadow-2xl max-h-60 overflow-y-auto"
                                     >
                                         {deviceSearch !== debouncedSearch ? (
                                             <div className="px-6 py-8 text-center">
@@ -356,7 +416,9 @@ Check your phone at: check-my-phone.vercel.app`;
                                                 >
                                                     <span className="font-medium">{d.name}</span>
                                                     <div className="flex gap-2">
-                                                        {d.specifications.toLowerCase().includes('esim') && filterType !== 'esim' && (
+                                                        {d.specifications.toLowerCase().includes('esim only') ? (
+                                                            <span className="text-[10px] bg-purple-500/10 text-purple-400 px-1.5 py-0.5 rounded border border-purple-500/20 font-bold uppercase">eSIM ONLY</span>
+                                                        ) : (d.specifications.toLowerCase().includes('esim') || d.specifications.toLowerCase().includes('embedded-sim')) && filterType !== 'esim' && (
                                                             <span className="text-[10px] bg-green-500/10 text-green-500 px-1.5 py-0.5 rounded border border-green-500/20 font-bold uppercase">eSIM</span>
                                                         )}
                                                         {d.specifications.toLowerCase().includes('satellite') && filterType !== 'satellite' && (
@@ -368,7 +430,7 @@ Check your phone at: check-my-phone.vercel.app`;
                                         ) : (
                                             <div className="px-6 py-6 text-center space-y-4">
                                                 <p className="text-slate-500 text-sm italic">
-                                                    No {filterType !== 'all' ? filterType : ''} devices found matching &quot;{deviceSearch}&quot;
+                                                    No {filterType !== 'all' ? filterType : ''} devices found {selectedBrand ? `in ${selectedBrand}` : ''} matching &quot;{deviceSearch}&quot;
                                                 </p>
                                                 <a
                                                     href={`https://www.gsmarena.com/res.php3?sSearch=${encodeURIComponent(deviceSearch)}`}
@@ -396,7 +458,11 @@ Check your phone at: check-my-phone.vercel.app`;
                                         <div className="flex items-center gap-2">
                                             <h3 className="font-bold text-blue-400">{selectedDevice.name}</h3>
                                             <div className="flex gap-2">
-                                                {hasEsim && (
+                                                {simInfo.isEsimOnly ? (
+                                                    <span className="px-2 py-0.5 rounded-full bg-purple-500/20 border border-purple-500/30 text-[10px] font-bold text-purple-400 uppercase tracking-widest flex items-center gap-1">
+                                                        <Smartphone className="w-2.5 h-2.5" /> eSIM Only
+                                                    </span>
+                                                ) : simInfo.hasEsim && (
                                                     <span className="px-2 py-0.5 rounded-full bg-green-500/20 border border-green-500/30 text-[10px] font-bold text-green-400 uppercase tracking-widest flex items-center gap-1">
                                                         <CheckCircle2 className="w-2.5 h-2.5" /> eSIM Ready
                                                     </span>
@@ -643,7 +709,7 @@ Check your phone at: check-my-phone.vercel.app`;
                         </motion.section>
                     )}
                 </AnimatePresence>
-            </main>
+            </main >
 
             <footer className="max-w-5xl mx-auto px-4 py-12 border-t border-slate-900 text-center">
                 <p className="text-slate-600 text-sm">
@@ -787,7 +853,7 @@ Check your phone at: check-my-phone.vercel.app`;
                     </div>
                 )}
             </AnimatePresence>
-        </div>
+        </div >
     );
 }
 

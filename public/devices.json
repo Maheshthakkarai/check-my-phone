@@ -1,6 +1,66 @@
 {
   "RECORDS": [
     {
+      "id": "ip17-air",
+      "name": "Apple iPhone 17 Air",
+      "specifications": "{\"4G bands\":\"1, 2, 3, 4, 5, 7, 8, 12, 13, 14, 17, 18, 19, 20, 25, 26, 28, 29, 30, 32, 34, 38, 39, 40, 41, 42, 46, 48, 53, 66, 71\",\"5G bands\":\"1, 2, 3, 5, 7, 8, 12, 14, 20, 25, 26, 28, 29, 30, 38, 40, 41, 48, 53, 66, 70, 71, 75, 76, 77, 78, 79, 258, 260, 261 SA/NSA/Sub6/mmWave\",\"Technology\":\"GSM / CDMA / HSPA / EVDO / LTE / 5G\",\"SIM\":\"eSIM Only\"}"
+    },
+    {
+      "id": "ip17pm-esim",
+      "name": "Apple iPhone 17 Pro Max (eSIM Markets)",
+      "specifications": "{\"4G bands\":\"1, 2, 3, 4, 5, 7, 8, 11, 12, 13, 14, 17, 18, 19, 20, 21, 25, 26, 28, 29, 30, 32, 34, 38, 39, 40, 41, 42, 48, 53, 66, 71\",\"5G bands\":\"1, 2, 3, 5, 7, 8, 12, 14, 20, 25, 26, 28, 29, 30, 38, 40, 41, 48, 53, 66, 70, 71, 75, 77, 78, 79, 258, 260, 261 SA/NSA/Sub6/mmWave\",\"Technology\":\"GSM / CDMA / HSPA / EVDO / LTE / 5G\",\"SIM\":\"eSIM Only\"}"
+    },
+    {
+      "id": "ip17p-esim",
+      "name": "Apple iPhone 17 Pro (eSIM Markets)",
+      "specifications": "{\"4G bands\":\"1, 2, 3, 4, 5, 7, 8, 11, 12, 13, 14, 17, 18, 19, 20, 21, 25, 26, 28, 29, 30, 32, 34, 38, 39, 40, 41, 42, 48, 53, 66, 71\",\"5G bands\":\"1, 2, 3, 5, 7, 8, 12, 14, 20, 25, 26, 28, 29, 30, 38, 40, 41, 48, 53, 66, 70, 71, 75, 77, 78, 79, 258, 260, 261 SA/NSA/Sub6/mmWave\",\"Technology\":\"GSM / CDMA / HSPA / EVDO / LTE / 5G\",\"SIM\":\"eSIM Only\"}"
+    },
+    {
+      "id": "ip17-esim",
+      "name": "Apple iPhone 17 (eSIM Markets)",
+      "specifications": "{\"4G bands\":\"1, 2, 3, 4, 5, 7, 8, 12, 13, 14, 17, 18, 19, 20, 25, 26, 28, 29, 30, 32, 34, 38, 39, 40, 41, 42, 46, 48, 66, 71\",\"5G bands\":\"1, 2, 3, 5, 7, 8, 12, 20, 25, 26, 28, 30, 38, 40, 41, 48, 66, 70, 71, 75, 77, 78 SA/NSA/Sub6\",\"Technology\":\"GSM / CDMA / HSPA / EVDO / LTE / 5G\",\"SIM\":\"eSIM Only\"}"
+    },
+    {
+      "id": "p10-us",
+      "name": "Google Pixel 10 (USA)",
+      "specifications": "{\"4G bands\":\"1, 2, 3, 4, 5, 7, 8, 12, 13, 14, 17, 18, 19, 20, 25, 26, 28, 29, 30, 32, 38, 39, 40, 41, 42, 46, 48, 66, 71\",\"5G bands\":\"1, 2, 3, 5, 7, 8, 12, 14, 20, 25, 26, 28, 29, 30, 38, 40, 41, 48, 66, 70, 71, 75, 77, 78, 79, 258, 260, 261 SA/NSA/Sub6/mmWave\",\"Technology\":\"GSM / CDMA / HSPA / EVDO / LTE / 5G\",\"SIM\":\"eSIM Only\"}"
+    },
+    {
+      "id": "p10p-us",
+      "name": "Google Pixel 10 Pro (USA)",
+      "specifications": "{\"4G bands\":\"1, 2, 3, 4, 5, 7, 8, 12, 13, 14, 17, 18, 19, 20, 25, 26, 28, 29, 30, 32, 38, 39, 40, 41, 42, 46, 48, 66, 71\",\"5G bands\":\"1, 2, 3, 5, 7, 8, 12, 14, 20, 25, 26, 28, 29, 30, 38, 40, 41, 48, 66, 70, 71, 75, 77, 78, 79, 258, 260, 261 SA/NSA/Sub6/mmWave\",\"Technology\":\"GSM / CDMA / HSPA / EVDO / LTE / 5G\",\"SIM\":\"eSIM Only\"}"
+    },
+    {
+      "id": "p10pxl-us",
+      "name": "Google Pixel 10 Pro XL (USA)",
+      "specifications": "{\"4G bands\":\"1, 2, 3, 4, 5, 7, 8, 12, 13, 14, 17, 18, 19, 20, 25, 26, 28, 29, 30, 32, 38, 39, 40, 41, 42, 46, 48, 66, 71\",\"5G bands\":\"1, 2, 3, 5, 7, 8, 12, 14, 20, 25, 26, 28, 29, 30, 38, 40, 41, 48, 66, 70, 71, 75, 77, 78, 79, 258, 260, 261 SA/NSA/Sub6/mmWave\",\"Technology\":\"GSM / CDMA / HSPA / EVDO / LTE / 5G\",\"SIM\":\"eSIM Only\"}"
+    },
+    {
+      "id": "moto-razr-2019",
+      "name": "Motorola Razr (2019)",
+      "specifications": "{\"4G bands\":\"2, 3, 4, 5, 7, 13, 20, 28, 66\",\"Technology\":\"GSM / HSPA / LTE\",\"SIM\":\"eSIM Only\"}"
+    },
+    {
+      "id": "moto-razr-5g",
+      "name": "Motorola Razr 5G",
+      "specifications": "{\"4G bands\":\"1, 2, 3, 4, 5, 7, 8, 12, 13, 17, 18, 19, 20, 26, 28, 34, 38, 39, 40, 41, 42, 46, 66, 71\",\"5G bands\":\"n1, n3, n5, n7, n28, n41, n77, n78, n79 Sub6\",\"Technology\":\"GSM / HSPA / LTE / 5G\",\"SIM\":\"Nano-SIM and eSIM\"}"
+    },
+    {
+      "id": "ip16p-us",
+      "name": "Apple iPhone 16 Pro (USA)",
+      "specifications": "{\"4G bands\":\"1, 2, 3, 4, 5, 7, 8, 12, 13, 14, 17, 18, 19, 20, 25, 26, 28, 29, 30, 32, 34, 38, 39, 40, 41, 42, 46, 48, 53, 66, 71\",\"5G bands\":\"1, 2, 3, 5, 7, 8, 12, 14, 20, 25, 26, 28, 29, 30, 38, 40, 41, 48, 53, 66, 70, 71, 75, 76, 77, 78, 79, 258, 260, 261 SA/NSA/Sub6/mmWave\",\"Technology\":\"GSM / CDMA / HSPA / EVDO / LTE / 5G\",\"SIM\":\"eSIM Only\"}"
+    },
+    {
+      "id": "ip15-us",
+      "name": "Apple iPhone 15 (USA)",
+      "specifications": "{\"4G bands\":\"1, 2, 3, 4, 5, 7, 8, 12, 13, 14, 17, 18, 19, 20, 25, 26, 28, 29, 30, 32, 34, 38, 39, 40, 41, 42, 46, 48, 53, 66, 71\",\"5G bands\":\"1, 2, 3, 5, 7, 8, 12, 14, 20, 25, 26, 28, 29, 30, 38, 40, 41, 48, 53, 66, 70, 71, 75, 76, 77, 78, 79, 258, 260, 261 SA/NSA/Sub6/mmWave\",\"Technology\":\"GSM / CDMA / HSPA / EVDO / LTE / 5G\",\"SIM\":\"eSIM Only\"}"
+    },
+    {
+      "id": "ip14-us",
+      "name": "Apple iPhone 14 (USA)",
+      "specifications": "{\"4G bands\":\"1, 2, 3, 4, 5, 7, 8, 12, 13, 14, 17, 18, 19, 20, 25, 26, 28, 29, 30, 32, 34, 38, 39, 40, 41, 42, 46, 48, 53, 66, 71\",\"5G bands\":\"1, 2, 3, 5, 7, 8, 12, 14, 20, 25, 26, 28, 29, 30, 38, 40, 41, 48, 53, 66, 70, 71, 77, 78, 79, 258, 260, 261 SA/NSA/Sub6/mmWave\",\"Technology\":\"GSM / CDMA / HSPA / EVDO / LTE / 5G\",\"SIM\":\"eSIM Only\"}"
+    },
+    {
       "id": "ip17pm",
       "name": "Apple iPhone 17 Pro Max",
       "specifications": "{\"4G bands\":\"1, 2, 3, 4, 5, 7, 8, 11, 12, 13, 14, 17, 18, 19, 20, 21, 25, 26, 28, 29, 30, 32, 34, 38, 39, 40, 41, 42, 48, 53, 66, 71\",\"5G bands\":\"1, 2, 3, 5, 7, 8, 12, 14, 20, 25, 26, 28, 29, 30, 38, 40, 41, 48, 53, 66, 70, 71, 75, 77, 78, 79, 258, 260, 261 SA/NSA/Sub6/mmWave\",\"Technology\":\"GSM / CDMA / HSPA / EVDO / LTE / 5G\",\"SIM\":\"Nano-SIM and eSIM\"}"
