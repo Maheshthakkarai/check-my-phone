@@ -593,9 +593,44 @@ Check your phone at: check-my-phone.vercel.app`;
                                                 <option value="">Select Carrier...</option>
                                                 {filteredOperators.map(o => {
                                                     const displayName = o.brand && o.brand.trim() !== o.operator.trim() && !o.operator.includes(o.brand) ? `${o.brand} (${o.operator})` : o.operator;
+
+                                                    // Smart Recommendation Logic
+                                                    let statusIcon = '';
+                                                    let statusLabel = '';
+
+                                                    if (selectedDevice) {
+                                                        const opBands = DataService.parseBands(o.bands || '');
+                                                        let deviceSpecs: DeviceSpecification = {};
+                                                        try {
+                                                            deviceSpecs = JSON.parse(selectedDevice.specifications);
+                                                        } catch { }
+
+                                                        const devBands = [
+                                                            deviceSpecs["2G bands"] || '',
+                                                            deviceSpecs["3G bands"] || '',
+                                                            deviceSpecs["4G bands"] || '',
+                                                            deviceSpecs["5G bands"] || '',
+                                                            deviceSpecs["Technology"] || ''
+                                                        ].join(' ');
+                                                        const devBandsList = DataService.parseBands(devBands);
+
+                                                        const { missing } = DataService.checkCompatibility(devBandsList, opBands);
+
+                                                        if (missing.length === 0) {
+                                                            statusIcon = '✅';
+                                                            statusLabel = '100% Match';
+                                                        } else if (missing.length < opBands.length) {
+                                                            statusIcon = '⚠️';
+                                                            statusLabel = 'Partial';
+                                                        } else {
+                                                            statusIcon = '❌';
+                                                            statusLabel = 'Incompatible';
+                                                        }
+                                                    }
+
                                                     return (
                                                         <option key={o.uniqueId} value={o.uniqueId}>
-                                                            {displayName} ({o.mcc}-{o.mnc})
+                                                            {statusIcon} {displayName} {statusLabel ? `(${statusLabel})` : `(${o.mcc}-${o.mnc})`}
                                                         </option>
                                                     );
                                                 })}
