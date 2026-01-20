@@ -764,7 +764,10 @@ Check your phone at: check-my-phone.vercel.app`;
             </main >
 
             <footer className="max-w-5xl mx-auto px-4 py-12 border-t border-slate-900 text-center">
-                <p className="text-slate-600 text-sm">
+                <p className="text-slate-400 text-sm mb-2">
+                    For any comments & feedback reach out to Mahesh Thakkar. If you are using this app, you know how to reach him  ;-)
+                </p>
+                <p className="text-slate-600 text-xs">
                     Check My Phone &copy; {new Date().getFullYear()} &bull; Open-source data via GSMA & FCC Public Records.
                 </p>
             </footer>
