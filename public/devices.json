@@ -82,22 +82,32 @@
     },
     {
       "id": "ip16p",
-      "name": "Apple iPhone 16 Pro",
+      "name": "Apple iPhone 16 Pro (Global)",
       "specifications": "{\"4G bands\":\"1, 2, 3, 4, 5, 7, 8, 12, 13, 17, 18, 19, 20, 25, 26, 28, 30, 32, 34, 38, 39, 40, 41, 42, 48, 66\",\"5G bands\":\"1, 2, 3, 5, 7, 8, 12, 20, 25, 26, 28, 30, 38, 40, 41, 48, 66, 70, 71, 75, 76, 77, 78, 79 SA/NSA/Sub6\",\"Technology\":\"GSM / CDMA / HSPA / EVDO / LTE / 5G\",\"SIM\":\"Nano-SIM and eSIM\"}"
     },
     {
       "id": "ip15",
-      "name": "Apple iPhone 15",
+      "name": "Apple iPhone 15 (Global)",
       "specifications": "{\"4G bands\":\"1, 2, 3, 4, 5, 7, 8, 12, 13, 17, 18, 19, 20, 25, 26, 28, 30, 32, 34, 38, 39, 40, 41, 42, 46, 48, 66\",\"5G bands\":\"1, 2, 3, 5, 7, 8, 12, 20, 25, 26, 28, 30, 38, 40, 41, 48, 66, 70, 71, 75, 76, 77, 78, 79 SA/NSA/Sub6\",\"Technology\":\"GSM / CDMA / HSPA / EVDO / LTE / 5G\",\"SIM\":\"Nano-SIM and eSIM\"}"
     },
     {
       "id": "ip14",
-      "name": "Apple iPhone 14",
+      "name": "Apple iPhone 14 (Global)",
       "specifications": "{\"4G bands\":\"1, 2, 3, 4, 5, 7, 8, 12, 13, 17, 18, 19, 20, 25, 26, 28, 30, 32, 34, 38, 39, 40, 41, 42, 46, 48, 66\",\"5G bands\":\"1, 2, 3, 5, 7, 8, 12, 20, 25, 26, 28, 30, 38, 40, 41, 48, 66, 70, 71, 77, 78, 79 SA/NSA/Sub6\",\"Technology\":\"GSM / CDMA / HSPA / EVDO / LTE / 5G\",\"SIM\":\"Nano-SIM and eSIM\"}"
     },
     {
       "id": "ip13",
-      "name": "Apple iPhone 13",
+      "name": "Apple iPhone 13 (Global)",
+      "specifications": "{\"4G bands\":\"1, 2, 3, 4, 5, 7, 8, 12, 13, 17, 18, 19, 20, 25, 26, 28, 30, 32, 34, 38, 39, 40, 41, 42, 46, 48, 66\",\"5G bands\":\"1, 2, 3, 5, 7, 8, 12, 20, 25, 28, 30, 38, 40, 41, 48, 66, 77, 78, 79 SA/NSA/Sub6\",\"Technology\":\"GSM / CDMA / HSPA / EVDO / LTE / 5G\",\"SIM\":\"Nano-SIM and eSIM\"}"
+    },
+    {
+      "id": "ip13-us",
+      "name": "Apple iPhone 13 (USA)",
+      "specifications": "{\"4G bands\":\"1, 2, 3, 4, 5, 7, 8, 12, 13, 14, 17, 18, 19, 20, 25, 26, 28, 29, 30, 32, 34, 38, 39, 40, 41, 42, 46, 48, 66, 71\",\"5G bands\":\"1, 2, 3, 5, 7, 8, 12, 20, 25, 28, 29, 30, 38, 40, 41, 48, 66, 71, 77, 78, 79 SA/NSA/Sub6\",\"Technology\":\"GSM / CDMA / HSPA / EVDO / LTE / 5G\",\"SIM\":\"Nano-SIM and eSIM\"}"
+    },
+    {
+      "id": "ip13m",
+      "name": "Apple iPhone 13 mini",
       "specifications": "{\"4G bands\":\"1, 2, 3, 4, 5, 7, 8, 12, 13, 17, 18, 19, 20, 25, 26, 28, 30, 32, 34, 38, 39, 40, 41, 42, 46, 48, 66\",\"5G bands\":\"1, 2, 3, 5, 7, 8, 12, 20, 25, 28, 30, 38, 40, 41, 48, 66, 77, 78, 79 SA/NSA/Sub6\",\"Technology\":\"GSM / CDMA / HSPA / EVDO / LTE / 5G\",\"SIM\":\"Nano-SIM and eSIM\"}"
     },
     {

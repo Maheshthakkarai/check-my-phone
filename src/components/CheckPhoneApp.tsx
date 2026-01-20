@@ -23,6 +23,7 @@ export default function CheckPhoneApp() {
     const [filterType, setFilterType] = useState<'all' | 'esim_only' | 'esim' | 'satellite'>('all'); // Filter state
 
     const [selectedBrand, setSelectedBrand] = useState('');
+    const [isCountrySearchFocused, setIsCountrySearchFocused] = useState(false);
 
     // Debounce search input to prevent lag during typing
     useEffect(() => {
@@ -46,13 +47,24 @@ export default function CheckPhoneApp() {
     useEffect(() => {
         async function init() {
             try {
-                const [ops, devs] = await Promise.all([
+                // Parallel fetch of operators and local (curated) devices
+                // This is much faster than waiting for the 2MB external database
+                const [ops, localDevs] = await Promise.all([
                     DataService.fetchOperators(),
-                    DataService.fetchDevices()
+                    DataService.fetchLocalDevices()
                 ]);
                 setOperators(ops);
-                setDevices(devs);
-            } finally {
+                setDevices(localDevs);
+
+                // Set loading to false as soon as core data & curated devices are ready
+                setLoading(false);
+
+                // Fetch full external database in the background to enrich search results
+                DataService.fetchDevices().then(allDevs => {
+                    setDevices(allDevs);
+                });
+            } catch (error) {
+                console.error("Init error:", error);
                 setLoading(false);
             }
         }
@@ -69,14 +81,14 @@ export default function CheckPhoneApp() {
 
         // Improved Logic: If single character (like from Alphabet chips), match strictly by start
         if (query.length === 1) {
-            return countries.filter(c => c && c.toLowerCase().startsWith(query));
+            return countries.filter((c: string) => c && c.toLowerCase().startsWith(query));
         }
 
-        return countries.filter(c => c && c.toLowerCase().includes(query)).slice(0, 50);
+        return countries.filter((c: string) => c && c.toLowerCase().includes(query)).slice(0, 50);
     }, [countries, countrySearch]);
 
     const alphabets = useMemo(() => {
-        const unique = new Set(countries.filter(c => c && c.length > 0).map(c => c[0].toUpperCase()));
+        const unique = new Set(countries.filter((c: string) => c && c.length > 0).map((c: string) => c[0].toUpperCase()));
         return Array.from(unique).sort();
     }, [countries]);
 
@@ -351,7 +363,7 @@ Check your phone at: check-my-phone.vercel.app`;
                                     }}
                                 >
                                     <option value="">All Brands</option>
-                                    {brands.map(brand => (
+                                    {brands.map((brand: string) => (
                                         <option key={brand} value={brand}>{brand}</option>
                                     ))}
                                 </select>
@@ -519,16 +531,21 @@ Check your phone at: check-my-phone.vercel.app`;
                                             if (selectedCountry) setSelectedCountry('');
                                         }}
                                         onFocus={() => {
+                                            setIsCountrySearchFocused(true);
                                             if (selectedCountry) {
                                                 setCountrySearch('');
                                                 setSelectedCountry('');
                                             }
                                         }}
+                                        onBlur={() => {
+                                            // Delay blur to allow item click
+                                            setTimeout(() => setIsCountrySearchFocused(false), 200);
+                                        }}
                                     />
                                 </div>
 
                                 <AnimatePresence>
-                                    {!selectedCountry && (
+                                    {!selectedCountry && (isCountrySearchFocused || countrySearch.length > 0) && (
                                         <motion.div
                                             initial={{ opacity: 0, y: 10 }}
                                             animate={{ opacity: 1, y: 0 }}
@@ -547,7 +564,7 @@ Check your phone at: check-my-phone.vercel.app`;
                                                 ))}
                                             </div>
                                             <div className="overflow-y-auto custom-scrollbar">
-                                                {(countrySearch ? filteredCountries : countries).map(c => (
+                                                {(countrySearch ? filteredCountries : countries).map((c: string) => (
                                                     <button
                                                         key={c}
                                                         onClick={() => {
@@ -591,7 +608,7 @@ Check your phone at: check-my-phone.vercel.app`;
                                                 }}
                                             >
                                                 <option value="">Select Carrier...</option>
-                                                {filteredOperators.map(o => {
+                                                {filteredOperators.map((o: Operator) => {
                                                     const displayName = o.brand && o.brand.trim() !== o.operator.trim() && !o.operator.includes(o.brand) ? `${o.brand} (${o.operator})` : o.operator;
 
                                                     // Smart Recommendation Logic
@@ -708,7 +725,7 @@ Check your phone at: check-my-phone.vercel.app`;
                                                 <div className="space-y-4">
                                                     <p className="text-xs font-semibold text-green-500/70 border-b border-green-500/10 pb-2 uppercase italic">Supported Bands</p>
                                                     <div className="flex flex-wrap gap-2">
-                                                        {compatibility.supported.map(b => (
+                                                        {compatibility.supported.map((b: string) => (
                                                             <span key={b} className="px-3 py-1.5 rounded-xl bg-green-500/10 border border-green-500/20 text-green-400 text-sm font-medium flex items-center gap-1.5">
                                                                 <CheckCircle2 className="w-3 h-3" /> {b}
                                                             </span>
@@ -719,7 +736,7 @@ Check your phone at: check-my-phone.vercel.app`;
                                                 <div className="space-y-4">
                                                     <p className="text-xs font-semibold text-red-500/70 border-b border-red-500/10 pb-2 uppercase italic">Unsupported Bands</p>
                                                     <div className="flex flex-wrap gap-2">
-                                                        {compatibility.missing.map(b => (
+                                                        {compatibility.missing.map((b: string) => (
                                                             <span key={b} className="px-3 py-1.5 rounded-xl bg-red-500/10 border border-red-500/20 text-red-400 text-sm font-medium flex items-center gap-1.5">
                                                                 <XCircle className="w-3 h-3" /> {b}
                                                             </span>

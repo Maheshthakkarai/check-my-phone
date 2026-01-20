@@ -19,19 +19,28 @@ export class DataService {
         }
     }
 
-    static async fetchDevices(): Promise<Device[]> {
+    static async fetchLocalDevices(): Promise<Device[]> {
         if (this.devices.length > 0) return this.devices;
 
-        let localDevices: Device[] = [];
         try {
             const localRes = await fetch('/devices.json');
             if (localRes.ok) {
                 const data = await localRes.json();
-                localDevices = data.RECORDS || [];
+                const local = (data.RECORDS || []).map((d: Device) => ({
+                    ...d,
+                    normalizedName: d.name.toLowerCase().replace(/\s+/g, '')
+                }));
+                if (this.devices.length === 0) this.devices = local;
+                return local;
             }
         } catch {
             console.warn('Local curated list not available');
         }
+        return [];
+    }
+
+    static async fetchDevices(): Promise<Device[]> {
+        const localDevices = await this.fetchLocalDevices();
 
         try {
             const response = await fetch(DEVICES_URL);
@@ -41,18 +50,17 @@ export class DataService {
                 normalizedName: d.name.toLowerCase().replace(/\s+/g, '')
             }));
 
-            this.devices = localDevices.map(d => ({
-                ...d,
-                normalizedName: d.name.toLowerCase().replace(/\s+/g, '')
-            }));
-            const deviceNames = new Set(this.devices.map(d => d.name.toLowerCase()));
+            // Merge with local devices, preferring local ones if names match
+            const merged = [...localDevices];
+            const deviceNames = new Set(merged.map(d => d.name.toLowerCase()));
 
             externalDevices.forEach((d: Device) => {
                 if (!deviceNames.has(d.name.toLowerCase())) {
-                    this.devices.push(d);
+                    merged.push(d);
                 }
             });
 
+            this.devices = merged;
             return this.devices;
         } catch (error) {
             console.error('Error fetching global device database:', error);
