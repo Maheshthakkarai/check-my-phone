@@ -890,7 +890,7 @@ Check your phone at: check-my-phone.vercel.app`;
                     For any comments & feedback reach out to Mahesh Thakkar. <i>If you are using this app, you know how to reach him</i> 😉
                 </p>
                 <p className="text-slate-400 text-xs font-medium">
-                    This is an independent community project. Data is provided &quot;as-is&quot; via public records (GSMA/FCC). &copy; {new Date().getFullYear()}. For more details, read the disclaimer in the <strong>About</strong> section.
+                    This is an independent community project. Data is provided &quot;as-is&quot; via public and community records. &copy; {new Date().getFullYear()}. For more details, read the disclaimer in the <strong>About</strong> section.
                 </p>
             </footer>
 
@@ -952,8 +952,8 @@ Check your phone at: check-my-phone.vercel.app`;
                                         <Info className="w-5 h-5" /> Legal Disclaimer
                                     </h3>
                                     <div className="text-xs space-y-2 text-slate-400 leading-relaxed uppercase">
-                                        <p>THIS APPLICATION IS PROVIDED &quot;AS IS&quot; FOR INFORMATIONAL PURPOSES ONLY. THE DATA IS SOURCED FROM FREE PUBLIC RESOURCES AND MAY BE INCOMPLETE, OUTDATED, OR INACCURATE.</p>
-                                        <p>THE DEVELOPER MAKES NO WARRANTIES REGARDING NETWORK COMPATIBILITY. WE STRONGLY RECOMMEND VERIFYING SPECIFICATIONS WITH YOUR CARRIER OR DEVICE MANUFACTURER BEFORE MAKING PURCHASES OR TRAVEL ARRANGEMENTS.</p>
+                                        <p>THIS APPLICATION IS PROVIDED &quot;AS IS&quot; FOR INFORMATIONAL PURPOSES ONLY. THE DATA IS SOURCED FROM MULTIPLE PUBLIC AND COMMUNITY RESOURCES, INCLUDING BUT NOT LIMITED TO GSMA, FCC, OSMOCOM, AND VARIOUS OPEN-SOURCE NETWORK DATABASES.</p>
+                                        <p>THE DATA MAY BE INCOMPLETE, OUTDATED, OR INACCURATE. THE DEVELOPER MAKES NO WARRANTIES REGARDING NETWORK COMPATIBILITY. WE STRONGLY RECOMMEND VERIFYING SPECIFICATIONS WITH YOUR CARRIER OR DEVICE MANUFACTURER BEFORE MAKING PURCHASES OR TRAVEL ARRANGEMENTS.</p>
                                         <p>UNDER NO CIRCUMSTANCES SHALL THE DEVELOPER BE LIABLE FOR ANY DIRECT, INDIRECT, OR CONSEQUENTIAL LOSSES, INCLUDING BUT NOT LIMITED TO NETWORK CONNECTION ISSUES, ROAMING COSTS, OR HARDWARE INCOMPATIBILITY.</p>
                                     </div>
                                 </section>
