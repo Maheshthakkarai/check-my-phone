@@ -2,8 +2,9 @@
 
 import React, { useState, useEffect, useMemo } from 'react';
 import { DataService } from '@/lib/dataService';
+import { ImeiService } from '@/lib/imeiService';
 import { Operator, Device, DeviceSpecification } from '@/lib/types';
-import { Search, Smartphone, Globe, Radio, CheckCircle2, XCircle, Info, Activity, RotateCcw, HelpCircle } from 'lucide-react';
+import { Search, Smartphone, Globe, Radio, CheckCircle2, XCircle, Info, Activity, RotateCcw, Book, HelpCircle, Hash, Fingerprint } from 'lucide-react';
 import { motion, AnimatePresence } from 'framer-motion';
 
 export default function CheckPhoneApp() {
@@ -25,6 +26,11 @@ export default function CheckPhoneApp() {
     const [selectedBrand, setSelectedBrand] = useState('');
     const [isCountrySearchFocused, setIsCountrySearchFocused] = useState(false);
 
+    const [selectionMethod, setSelectionMethod] = useState<'manual' | 'imei'>('manual');
+    const [imeiInput, setImeiInput] = useState('');
+    const [imeiError, setImeiError] = useState('');
+    const [tacDatabase, setTacDatabase] = useState<Record<string, string>>({});
+
     // Debounce search input to prevent lag during typing
     useEffect(() => {
         const timer = setTimeout(() => {
@@ -42,6 +48,8 @@ export default function CheckPhoneApp() {
         setSelectedDevice(null);
         setFilterType('all');
         setSelectedBrand('');
+        setImeiInput('');
+        setImeiError('');
     };
 
     useEffect(() => {
@@ -49,20 +57,25 @@ export default function CheckPhoneApp() {
             try {
                 // Parallel fetch of operators and local (curated) devices
                 // This is much faster than waiting for the 2MB external database
-                const [ops, localDevs] = await Promise.all([
+                const [ops, localDevs, tacDb] = await Promise.all([
                     DataService.fetchOperators(),
-                    DataService.fetchLocalDevices()
+                    DataService.fetchLocalDevices(),
+                    DataService.fetchTacDatabase()
                 ]);
                 setOperators(ops);
                 setDevices(localDevs);
+                setTacDatabase(tacDb);
 
                 // Set loading to false as soon as core data & curated devices are ready
                 setLoading(false);
 
-                // Fetch full external database in the background to enrich search results
+                // Fetch full external database in the background
                 DataService.fetchDevices().then(allDevs => {
                     setDevices(allDevs);
                 });
+
+                // Refresh TAC DB just in case
+                DataService.fetchTacDatabase().then(db => setTacDatabase(db));
             } catch (error) {
                 console.error("Init error:", error);
                 setLoading(false);
@@ -70,6 +83,57 @@ export default function CheckPhoneApp() {
         }
         init();
     }, []);
+
+    useEffect(() => {
+        if (selectionMethod === 'imei' && imeiInput.length >= 8) {
+            const deviceId = ImeiService.lookupDevice(imeiInput);
+            if (deviceId) {
+                const device = devices.find(d => d.id === deviceId);
+                if (device) {
+                    setSelectedDevice(device);
+                    setImeiError('');
+                    return;
+                }
+            }
+
+            // Fallback: Check the larger Osmocom database
+            const tac = imeiInput.substring(0, 8);
+            const genericName = tacDatabase[tac];
+            if (genericName) {
+                // We create a temporary "Virtual" device for compatibility checking
+                // If it's in Osmocom, we know the name, but we might not have the bands
+                // Let's see if we can find a matching device by name in our full database
+                const existingMatch = devices.find(d =>
+                    d.name.toLowerCase().includes(genericName.toLowerCase()) ||
+                    genericName.toLowerCase().includes(d.name.toLowerCase())
+                );
+
+                if (existingMatch) {
+                    setSelectedDevice(existingMatch);
+                    setImeiError(`Detected: ${genericName}`);
+                } else {
+                    setSelectedDevice(null);
+                    setImeiError(`Recognized as ${genericName}, but network specs are missing from our database.`);
+                }
+            } else {
+                setSelectedDevice(null);
+                if (imeiInput.length >= 15) {
+                    if (ImeiService.validate(imeiInput)) {
+                        setImeiError('Valid IMEI, but device model not in our database.');
+                    } else {
+                        setImeiError('Invalid IMEI checksum. Please check the digits.');
+                    }
+                } else {
+                    setImeiError('Device not recognized. Enter full IMEI for verification.');
+                }
+            }
+        } else {
+            if (selectionMethod === 'imei') {
+                setSelectedDevice(null);
+                setImeiError('');
+            }
+        }
+    }, [imeiInput, selectionMethod, devices, tacDatabase]);
 
 
     const countries = useMemo(() => DataService.getCountries(operators), [operators]);
@@ -237,14 +301,6 @@ Check your phone at: check-my-phone.vercel.app`;
             <main className="relative z-10 max-w-5xl mx-auto px-4 py-12 md:py-20">
                 <header className="text-center mb-16">
                     <div className="flex flex-col items-center gap-6 mb-6 md:mb-10">
-                        <motion.div
-                            initial={{ opacity: 0, y: -20 }}
-                            animate={{ opacity: 1, y: 0 }}
-                            className="inline-flex items-center gap-2 px-4 py-1.5 rounded-full bg-blue-500/10 border border-blue-500/20 text-blue-400 text-xs md:text-sm font-medium"
-                        >
-                            <Activity className="w-4 h-4" />
-                            Global Real-Time Database
-                        </motion.div>
 
                         <div className="flex flex-wrap items-center justify-center gap-x-6 gap-y-4">
                             <motion.button
@@ -266,7 +322,7 @@ Check your phone at: check-my-phone.vercel.app`;
                                 onClick={() => setShowHelp(true)}
                                 className="text-xs text-slate-400 hover:text-white flex items-center gap-2 transition-colors font-medium border-r border-slate-800 pr-6 last:border-0"
                             >
-                                <HelpCircle className="w-4 h-4 text-indigo-400" /> Help
+                                <Book className="w-4 h-4 text-indigo-400" /> User Manual
                             </motion.button>
 
                             <motion.button
@@ -314,86 +370,152 @@ Check your phone at: check-my-phone.vercel.app`;
                             <h2 className="text-xl md:text-2xl font-semibold">Your Device</h2>
                         </div>
 
-                        <div className="flex gap-2 mb-4">
-                            <button
-                                onClick={() => setFilterType('all')}
-                                className={`px-3 py-1.5 rounded-lg text-xs font-bold uppercase tracking-widest transition-all ${filterType === 'all'
-                                    ? 'bg-blue-500 text-white shadow-lg shadow-blue-500/25'
-                                    : 'bg-slate-800 text-slate-400 hover:bg-slate-700'}`}
-                            >
-                                All
-                            </button>
-                            <button
-                                onClick={() => setFilterType('esim_only')}
-                                className={`px-3 py-1.5 rounded-lg text-xs font-bold uppercase tracking-widest transition-all flex items-center gap-1.5 ${filterType === 'esim_only'
-                                    ? 'bg-purple-500 text-white shadow-lg shadow-purple-500/25'
-                                    : 'bg-slate-800 text-slate-400 hover:bg-slate-700'}`}
-                            >
-                                <Smartphone className="w-3 h-3" /> eSIM Only
-                            </button>
-                            <button
-                                onClick={() => setFilterType('esim')}
-                                className={`px-3 py-1.5 rounded-lg text-xs font-bold uppercase tracking-widest transition-all flex items-center gap-1.5 ${filterType === 'esim'
-                                    ? 'bg-green-500 text-white shadow-lg shadow-green-500/25'
-                                    : 'bg-slate-800 text-slate-400 hover:bg-slate-700'}`}
-                            >
-                                <CheckCircle2 className="w-3 h-3" /> eSIM
-                            </button>
-                            <button
-                                onClick={() => setFilterType('satellite')}
-                                className={`px-3 py-1.5 rounded-lg text-xs font-bold uppercase tracking-widest transition-all flex items-center gap-1.5 ${filterType === 'satellite'
-                                    ? 'bg-sky-500 text-white shadow-lg shadow-sky-500/25'
-                                    : 'bg-slate-800 text-slate-400 hover:bg-slate-700'}`}
-                            >
-                                <Radio className="w-3 h-3" /> Satellite
-                            </button>
+                        <p className="text-xs text-slate-500 mb-6 -mt-4 pl-1">
+                            Tip: If you cannot find your device by IMEI, try the <strong>Search by Model</strong> option below.
+                        </p>
+
+                        <div className="flex flex-col gap-4 mb-8">
+                            <div className="flex p-1 bg-slate-950/80 border border-slate-800 rounded-2xl">
+                                <button
+                                    onClick={() => {
+                                        setSelectionMethod('manual');
+                                        setSelectedDevice(null);
+                                        setImeiInput('');
+                                    }}
+                                    className={`flex-1 flex items-center justify-center gap-2 py-2.5 rounded-xl text-xs font-bold transition-all ${selectionMethod === 'manual' ? 'bg-blue-600 text-white shadow-lg' : 'text-slate-500 hover:text-slate-300'}`}
+                                >
+                                    <Search className="w-3.5 h-3.5" /> Search by Model
+                                </button>
+                                <button
+                                    onClick={() => {
+                                        setSelectionMethod('imei');
+                                        setSelectedDevice(null);
+                                        setDeviceSearch('');
+                                    }}
+                                    className={`flex-1 flex items-center justify-center gap-2 py-2.5 rounded-xl text-xs font-bold transition-all ${selectionMethod === 'imei' ? 'bg-indigo-600 text-white shadow-lg' : 'text-slate-500 hover:text-slate-300'}`}
+                                >
+                                    <Hash className="w-3.5 h-3.5" /> Instant IMEI Lookup
+                                </button>
+                            </div>
+
+                            {selectionMethod === 'manual' && (
+                                <motion.div
+                                    initial={{ opacity: 0, y: 5 }}
+                                    animate={{ opacity: 1, y: 0 }}
+                                    className="flex gap-2"
+                                >
+                                    <button
+                                        onClick={() => setFilterType('all')}
+                                        className={`px-3 py-1.5 rounded-lg text-xs font-bold uppercase tracking-widest transition-all ${filterType === 'all'
+                                            ? 'bg-blue-500 text-white shadow-lg shadow-blue-500/25'
+                                            : 'bg-slate-800 text-slate-400 hover:bg-slate-700'}`}
+                                    >
+                                        All
+                                    </button>
+                                    <button
+                                        onClick={() => setFilterType('esim_only')}
+                                        className={`px-3 py-1.5 rounded-lg text-xs font-bold uppercase tracking-widest transition-all flex items-center gap-1.5 ${filterType === 'esim_only'
+                                            ? 'bg-purple-500 text-white shadow-lg shadow-purple-500/25'
+                                            : 'bg-slate-800 text-slate-400 hover:bg-slate-700'}`}
+                                    >
+                                        <Smartphone className="w-3 h-3" /> eSIM Only
+                                    </button>
+                                    <button
+                                        onClick={() => setFilterType('esim')}
+                                        className={`px-3 py-1.5 rounded-lg text-xs font-bold uppercase tracking-widest transition-all flex items-center gap-1.5 ${filterType === 'esim'
+                                            ? 'bg-green-500 text-white shadow-lg shadow-green-500/25'
+                                            : 'bg-slate-800 text-slate-400 hover:bg-slate-700'}`}
+                                    >
+                                        <CheckCircle2 className="w-3 h-3" /> eSIM
+                                    </button>
+                                    <button
+                                        onClick={() => setFilterType('satellite')}
+                                        className={`px-3 py-1.5 rounded-lg text-xs font-bold uppercase tracking-widest transition-all flex items-center gap-1.5 ${filterType === 'satellite'
+                                            ? 'bg-sky-500 text-white shadow-lg shadow-sky-500/25'
+                                            : 'bg-slate-800 text-slate-400 hover:bg-slate-700'}`}
+                                    >
+                                        <Radio className="w-3 h-3" /> Satellite
+                                    </button>
+                                </motion.div>
+                            )}
                         </div>
 
+                        {selectionMethod === 'manual' ? (
+                            <div className="flex gap-4 mb-4">
+                                <div className="relative w-1/3 min-w-[120px]">
+                                    <select
+                                        className="w-full bg-slate-950/50 border border-slate-800 rounded-2xl py-3.5 pl-4 pr-8 outline-none focus:border-blue-500/50 transition-all text-white appearance-none text-xs md:text-sm font-medium"
+                                        value={selectedBrand}
+                                        onChange={(e) => {
+                                            setSelectedBrand(e.target.value);
+                                            setDeviceSearch(''); // Clear text search when switching brands
+                                            setSelectedDevice(null);
+                                        }}
+                                    >
+                                        <option value="">All Brands</option>
+                                        {brands.map((brand: string) => (
+                                            <option key={brand} value={brand}>{brand}</option>
+                                        ))}
+                                    </select>
+                                    <div className="absolute right-3 top-1/2 -translate-y-1/2 pointer-events-none text-slate-500">
+                                        <svg width="10" height="6" viewBox="0 0 10 6" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+                                            <path d="M1 1L5 5L9 1" />
+                                        </svg>
+                                    </div>
+                                </div>
 
-
-                        <div className="flex gap-4 mb-4">
-                            <div className="relative w-1/3 min-w-[120px]">
-                                <select
-                                    className="w-full bg-slate-950/50 border border-slate-800 rounded-2xl py-3.5 pl-4 pr-8 outline-none focus:border-blue-500/50 transition-all text-white appearance-none text-xs md:text-sm font-medium"
-                                    value={selectedBrand}
-                                    onChange={(e) => {
-                                        setSelectedBrand(e.target.value);
-                                        setDeviceSearch(''); // Clear text search when switching brands
-                                        setSelectedDevice(null);
-                                    }}
-                                >
-                                    <option value="">All Brands</option>
-                                    {brands.map((brand: string) => (
-                                        <option key={brand} value={brand}>{brand}</option>
-                                    ))}
-                                </select>
-                                <div className="absolute right-3 top-1/2 -translate-y-1/2 pointer-events-none text-slate-500">
-                                    <svg width="10" height="6" viewBox="0 0 10 6" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
-                                        <path d="M1 1L5 5L9 1" />
-                                    </svg>
+                                <div className="relative w-2/3">
+                                    <Search className="absolute left-4 top-1/2 -translate-y-1/2 w-5 h-5 text-slate-500" />
+                                    <input
+                                        type="text"
+                                        placeholder={
+                                            filterType === 'esim_only' ? "Search eSIM Only..." :
+                                                filterType === 'esim' ? "Search eSIM..." :
+                                                    filterType === 'satellite' ? "Search Satellite..." :
+                                                        selectedBrand ? `Search ${selectedBrand}...` :
+                                                            "Search Model..."
+                                        }
+                                        className="w-full bg-slate-950/50 border border-slate-800 rounded-2xl py-3.5 pl-12 pr-4 outline-none focus:border-blue-500/50 transition-all text-white placeholder:text-slate-600 text-sm md:text-base"
+                                        value={deviceSearch}
+                                        onChange={(e) => {
+                                            setDeviceSearch(e.target.value);
+                                            if (selectedDevice) setSelectedDevice(null);
+                                        }}
+                                    />
                                 </div>
                             </div>
-
-                            <div className="relative w-2/3">
-                                <Search className="absolute left-4 top-1/2 -translate-y-1/2 w-5 h-5 text-slate-500" />
-                                <input
-                                    type="text"
-                                    placeholder={
-                                        filterType === 'esim_only' ? "Search eSIM Only..." :
-                                            filterType === 'esim' ? "Search eSIM..." :
-                                                filterType === 'satellite' ? "Search Satellite..." :
-                                                    selectedBrand ? `Search ${selectedBrand}...` :
-                                                        "Search Model..."
-                                    }
-                                    className="w-full bg-slate-950/50 border border-slate-800 rounded-2xl py-3.5 pl-12 pr-4 outline-none focus:border-blue-500/50 transition-all text-white placeholder:text-slate-600 text-sm md:text-base"
-                                    value={deviceSearch}
-                                    onChange={(e) => {
-                                        setDeviceSearch(e.target.value);
-                                        if (selectedDevice) setSelectedDevice(null);
-                                    }}
-                                />
+                        ) : (
+                            <div className="space-y-4 mb-6">
+                                <div className="relative">
+                                    <Hash className="absolute left-4 top-1/2 -translate-y-1/2 w-5 h-5 text-slate-500" />
+                                    <input
+                                        type="text"
+                                        maxLength={15}
+                                        placeholder="Enter 15-digit IMEI..."
+                                        className={`w-full bg-slate-950/50 border ${imeiError ? 'border-red-500/50' : 'border-slate-800'} rounded-2xl py-4 pl-12 pr-4 outline-none focus:border-indigo-500/50 transition-all text-white placeholder:text-slate-600 text-base md:text-lg font-mono tracking-widest`}
+                                        value={imeiInput}
+                                        onChange={(e) => {
+                                            const val = e.target.value.replace(/\D/g, '').slice(0, 15);
+                                            setImeiInput(val);
+                                        }}
+                                    />
+                                </div>
+                                {imeiError && (
+                                    <motion.p
+                                        initial={{ opacity: 0, y: -5 }}
+                                        animate={{ opacity: 1, y: 0 }}
+                                        className="text-red-400 text-xs px-2 flex items-center gap-2"
+                                    >
+                                        <XCircle className="w-3 h-3" /> {imeiError}
+                                    </motion.p>
+                                )}
+                                {!selectedDevice && !imeiError && (
+                                    <p className="text-slate-500 text-[10px] md:text-xs px-2 leading-relaxed">
+                                        💡 Tip: Dial <span className="text-indigo-400 font-bold">*#06#</span> on your phone to find your IMEI instantly. Only the first 8 digits are used for identification.
+                                    </p>
+                                )}
                             </div>
-                        </div>
+                        )}
 
                         <div className="relative mb-4 md:mb-6">
                             <AnimatePresence>
@@ -767,8 +889,8 @@ Check your phone at: check-my-phone.vercel.app`;
                 <p className="text-slate-400 text-sm mb-2">
                     For any comments & feedback reach out to Mahesh Thakkar. <i>If you are using this app, you know how to reach him</i> 😉
                 </p>
-                <p className="text-slate-600 text-xs">
-                    Check My Phone &copy; {new Date().getFullYear()} &bull; Open-source data via GSMA & FCC Public Records.
+                <p className="text-slate-400 text-xs font-medium">
+                    This is an independent community project. Data is provided &quot;as-is&quot; via public records (GSMA/FCC). &copy; {new Date().getFullYear()}. For more details, read the disclaimer in the <strong>About</strong> section.
                 </p>
             </footer>
 
@@ -820,8 +942,19 @@ Check your phone at: check-my-phone.vercel.app`;
                                         <p className="text-xs text-slate-400">Comprehensive indexing from flagship iPhones to reliable budget models from the last 7 years.</p>
                                     </div>
                                     <div className="p-4 rounded-2xl bg-slate-950/50 border border-slate-800">
-                                        <h4 className="font-bold text-white mb-1">Real-Time Data</h4>
-                                        <p className="text-xs text-slate-400">Regularly updated carrier records ensuring accurate technical frequency mappings.</p>
+                                        <h4 className="font-bold text-white mb-1">Community Sourced</h4>
+                                        <p className="text-xs text-slate-400">Data aggregated from free, open-source records and community contributions.</p>
+                                    </div>
+                                </section>
+
+                                <section className="p-5 rounded-2xl bg-red-500/5 border border-red-500/10">
+                                    <h3 className="text-lg font-semibold text-red-400 mb-2 flex items-center gap-2">
+                                        <Info className="w-5 h-5" /> Legal Disclaimer
+                                    </h3>
+                                    <div className="text-xs space-y-2 text-slate-400 leading-relaxed uppercase">
+                                        <p>THIS APPLICATION IS PROVIDED &quot;AS IS&quot; FOR INFORMATIONAL PURPOSES ONLY. THE DATA IS SOURCED FROM FREE PUBLIC RESOURCES AND MAY BE INCOMPLETE, OUTDATED, OR INACCURATE.</p>
+                                        <p>THE DEVELOPER MAKES NO WARRANTIES REGARDING NETWORK COMPATIBILITY. WE STRONGLY RECOMMEND VERIFYING SPECIFICATIONS WITH YOUR CARRIER OR DEVICE MANUFACTURER BEFORE MAKING PURCHASES OR TRAVEL ARRANGEMENTS.</p>
+                                        <p>UNDER NO CIRCUMSTANCES SHALL THE DEVELOPER BE LIABLE FOR ANY DIRECT, INDIRECT, OR CONSEQUENTIAL LOSSES, INCLUDING BUT NOT LIMITED TO NETWORK CONNECTION ISSUES, ROAMING COSTS, OR HARDWARE INCOMPATIBILITY.</p>
                                     </div>
                                 </section>
 
@@ -862,9 +995,9 @@ Check your phone at: check-my-phone.vercel.app`;
                                 <XCircle className="w-6 h-6 text-slate-500" />
                             </button>
 
-                            <h2 className="text-2xl font-bold mb-8 flex items-center gap-3">
-                                <HelpCircle className="w-6 h-6 text-indigo-400" />
-                                How to Use
+                            <h2 className="text-2xl font-bold mb-8 flex items-center gap-3 text-white">
+                                <Book className="w-6 h-6 text-indigo-400" />
+                                User Manual
                             </h2>
 
                             <div className="space-y-6">
@@ -872,7 +1005,7 @@ Check your phone at: check-my-phone.vercel.app`;
                                     <div className="flex-shrink-0 w-8 h-8 rounded-full bg-blue-500/10 border border-blue-500/20 flex items-center justify-center text-blue-400 font-bold text-sm">1</div>
                                     <div>
                                         <p className="font-semibold text-white mb-1">Search Your Phone</p>
-                                        <p className="text-sm text-slate-400">Type your phone&apos;s name (e.g., &quot;iPhone 15&quot;) and select it from the list.</p>
+                                        <p className="text-sm text-slate-400">Choose between <strong>Search by Model</strong> or <strong>Instant IMEI Lookup</strong>. Dial <code className="text-blue-400 font-mono">*#06#</code> on your phone to find your IMEI instantly.</p>
                                     </div>
                                 </div>
 
@@ -880,7 +1013,7 @@ Check your phone at: check-my-phone.vercel.app`;
                                     <div className="flex-shrink-0 w-8 h-8 rounded-full bg-indigo-500/10 border border-indigo-500/20 flex items-center justify-center text-indigo-400 font-bold text-sm">2</div>
                                     <div>
                                         <p className="font-semibold text-white mb-1">Pick a Destination</p>
-                                        <p className="text-sm text-slate-400">Select the country you are visiting and your preferred local carrier.</p>
+                                        <p className="text-sm text-slate-400">Select the country you are visiting and your preferred local carrier from our global list.</p>
                                     </div>
                                 </div>
 
@@ -888,18 +1021,24 @@ Check your phone at: check-my-phone.vercel.app`;
                                     <div className="flex-shrink-0 w-8 h-8 rounded-full bg-green-500/10 border border-green-500/20 flex items-center justify-center text-green-400 font-bold text-sm">3</div>
                                     <div>
                                         <p className="font-semibold text-white mb-1">Check Compatibility</p>
-                                        <p className="text-sm text-slate-400">Instantly see if your phone supports the carrier&apos;s network bands.</p>
+                                        <p className="text-sm text-slate-400">Instantly see if your hardware supports the carrier&apos;s frequency bands (3G/4G/5G).</p>
                                     </div>
                                 </div>
 
-                                <div className="mt-8 p-4 rounded-2xl bg-amber-500/5 border border-amber-500/10 flex gap-3 text-xs text-amber-200/60 leading-relaxed">
-                                    <Info className="w-4 h-4 flex-shrink-0" />
-                                    <span>Tip: If your phone isn&apos;t listed, use the GSMArena search button in the search results.</span>
+                                <div className="mt-8 space-y-3">
+                                    <div className="p-4 rounded-2xl bg-blue-500/5 border border-blue-500/10 flex gap-3 text-xs text-blue-200/60 leading-relaxed">
+                                        <Info className="w-4 h-4 flex-shrink-0" />
+                                        <span>Pro Tip: If IMEI lookup doesn&apos;t recognize your device, try the Manual Search to find it by model name.</span>
+                                    </div>
+                                    <div className="p-4 rounded-2xl bg-amber-500/5 border border-amber-500/10 flex gap-3 text-xs text-amber-200/60 leading-relaxed">
+                                        <Smartphone className="w-4 h-4 flex-shrink-0" />
+                                        <span>Satellite Mode: Use the filter buttons to find devices compatible with Thuraya satellite networks.</span>
+                                    </div>
                                 </div>
 
                                 <button
                                     onClick={() => setShowHelp(false)}
-                                    className="w-full mt-4 py-4 bg-slate-800 hover:bg-slate-700 rounded-2xl font-bold text-white transition-colors"
+                                    className="w-full mt-4 py-4 bg-gradient-to-r from-blue-600 to-indigo-600 hover:from-blue-500 hover:to-indigo-500 rounded-2xl font-bold text-white transition-all shadow-lg shadow-blue-500/20"
                                 >
                                     Start Checking
                                 </button>

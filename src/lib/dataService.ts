@@ -6,6 +6,21 @@ const DEVICES_URL = 'https://raw.githubusercontent.com/ilyasozkurt/mobilephone-b
 export class DataService {
     private static operators: Operator[] = [];
     private static devices: Device[] = [];
+    private static tacDatabase: Record<string, string> | null = null;
+
+    static async fetchTacDatabase(): Promise<Record<string, string>> {
+        if (this.tacDatabase) return this.tacDatabase;
+        try {
+            const res = await fetch('/tac_lite.json');
+            if (res.ok) {
+                this.tacDatabase = await res.json();
+                return this.tacDatabase || {};
+            }
+        } catch (e) {
+            console.warn('TAC database not available');
+        }
+        return {};
+    }
 
     static async fetchOperators(): Promise<Operator[]> {
         if (this.operators.length > 0) return this.operators;
