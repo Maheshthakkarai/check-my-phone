@@ -26,249 +26,79 @@
       "specifications": "{\"4G bands\":\"1, 2, 3, 4, 5, 7, 8, 12, 13, 14, 17, 18, 19, 20, 25, 26, 28, 29, 30, 32, 38, 39, 40, 41, 42, 46, 48, 66, 71\",\"5G bands\":\"1, 2, 3, 5, 7, 8, 12, 14, 20, 25, 26, 28, 29, 30, 38, 40, 41, 48, 66, 70, 71, 75, 77, 78, 79, 258, 260, 261 SA/NSA/Sub6/mmWave\",\"Technology\":\"GSM / CDMA / HSPA / EVDO / LTE / 5G\",\"SIM\":\"eSIM Only\"}"
     },
     {
-      "id": "p10p-us",
-      "name": "Google Pixel 10 Pro (USA)",
-      "specifications": "{\"4G bands\":\"1, 2, 3, 4, 5, 7, 8, 12, 13, 14, 17, 18, 19, 20, 25, 26, 28, 29, 30, 32, 38, 39, 40, 41, 42, 46, 48, 66, 71\",\"5G bands\":\"1, 2, 3, 5, 7, 8, 12, 14, 20, 25, 26, 28, 29, 30, 38, 40, 41, 48, 66, 70, 71, 75, 77, 78, 79, 258, 260, 261 SA/NSA/Sub6/mmWave\",\"Technology\":\"GSM / CDMA / HSPA / EVDO / LTE / 5G\",\"SIM\":\"eSIM Only\"}"
+      "id": "sam-a17",
+      "name": "Samsung Galaxy A17",
+      "specifications": "{\"4G bands\":\"1, 2, 3, 4, 5, 7, 8, 12, 17, 20, 26, 28, 32, 38, 40, 41, 66\",\"5G bands\":\"1, 3, 5, 7, 8, 20, 28, 38, 40, 41, 66, 77, 78 SA/NSA\",\"Technology\":\"GSM / HSPA / LTE / 5G\",\"SIM\":\"Nano-SIM and eSIM\"}"
     },
     {
-      "id": "p10pxl-us",
-      "name": "Google Pixel 10 Pro XL (USA)",
-      "specifications": "{\"4G bands\":\"1, 2, 3, 4, 5, 7, 8, 12, 13, 14, 17, 18, 19, 20, 25, 26, 28, 29, 30, 32, 38, 39, 40, 41, 42, 46, 48, 66, 71\",\"5G bands\":\"1, 2, 3, 5, 7, 8, 12, 14, 20, 25, 26, 28, 29, 30, 38, 40, 41, 48, 66, 70, 71, 75, 77, 78, 79, 258, 260, 261 SA/NSA/Sub6/mmWave\",\"Technology\":\"GSM / CDMA / HSPA / EVDO / LTE / 5G\",\"SIM\":\"eSIM Only\"}"
-    },
-    {
-      "id": "moto-razr-2019",
-      "name": "Motorola Razr (2019)",
-      "specifications": "{\"4G bands\":\"2, 3, 4, 5, 7, 13, 20, 28, 66\",\"Technology\":\"GSM / HSPA / LTE\",\"SIM\":\"eSIM Only\"}"
-    },
-    {
-      "id": "moto-razr-5g",
-      "name": "Motorola Razr 5G",
-      "specifications": "{\"4G bands\":\"1, 2, 3, 4, 5, 7, 8, 12, 13, 17, 18, 19, 20, 26, 28, 34, 38, 39, 40, 41, 42, 46, 66, 71\",\"5G bands\":\"n1, n3, n5, n7, n28, n41, n77, n78, n79 Sub6\",\"Technology\":\"GSM / HSPA / LTE / 5G\",\"SIM\":\"Nano-SIM and eSIM\"}"
+      "id": "ip16pm",
+      "name": "Apple iPhone 16 Pro Max",
+      "specifications": "{\"4G bands\":\"1, 2, 3, 4, 5, 7, 8, 12, 13, 14, 17, 18, 19, 20, 25, 26, 28, 29, 30, 32, 34, 38, 39, 40, 41, 42, 48, 53, 66, 71\",\"5G bands\":\"1, 2, 3, 5, 7, 8, 12, 14, 20, 25, 26, 28, 29, 30, 38, 40, 41, 48, 53, 66, 70, 71, 75, 76, 77, 78, 79, 258, 260, 261 SA/NSA/Sub6/mmWave\",\"Technology\":\"GSM / CDMA / HSPA / EVDO / LTE / 5G\",\"SIM\":\"Nano-SIM and eSIM\"}"
     },
     {
       "id": "ip16p-us",
       "name": "Apple iPhone 16 Pro (USA)",
-      "specifications": "{\"4G bands\":\"1, 2, 3, 4, 5, 7, 8, 12, 13, 14, 17, 18, 19, 20, 25, 26, 28, 29, 30, 32, 34, 38, 39, 40, 41, 42, 46, 48, 53, 66, 71\",\"5G bands\":\"1, 2, 3, 5, 7, 8, 12, 14, 20, 25, 26, 28, 29, 30, 38, 40, 41, 48, 53, 66, 70, 71, 75, 76, 77, 78, 79, 258, 260, 261 SA/NSA/Sub6/mmWave\",\"Technology\":\"GSM / CDMA / HSPA / EVDO / LTE / 5G\",\"SIM\":\"eSIM Only\"}"
-    },
-    {
-      "id": "ip15-us",
-      "name": "Apple iPhone 15 (USA)",
-      "specifications": "{\"4G bands\":\"1, 2, 3, 4, 5, 7, 8, 12, 13, 14, 17, 18, 19, 20, 25, 26, 28, 29, 30, 32, 34, 38, 39, 40, 41, 42, 46, 48, 53, 66, 71\",\"5G bands\":\"1, 2, 3, 5, 7, 8, 12, 14, 20, 25, 26, 28, 29, 30, 38, 40, 41, 48, 53, 66, 70, 71, 75, 76, 77, 78, 79, 258, 260, 261 SA/NSA/Sub6/mmWave\",\"Technology\":\"GSM / CDMA / HSPA / EVDO / LTE / 5G\",\"SIM\":\"eSIM Only\"}"
-    },
-    {
-      "id": "ip14-us",
-      "name": "Apple iPhone 14 (USA)",
-      "specifications": "{\"4G bands\":\"1, 2, 3, 4, 5, 7, 8, 12, 13, 14, 17, 18, 19, 20, 25, 26, 28, 29, 30, 32, 34, 38, 39, 40, 41, 42, 46, 48, 53, 66, 71\",\"5G bands\":\"1, 2, 3, 5, 7, 8, 12, 14, 20, 25, 26, 28, 29, 30, 38, 40, 41, 48, 53, 66, 70, 71, 77, 78, 79, 258, 260, 261 SA/NSA/Sub6/mmWave\",\"Technology\":\"GSM / CDMA / HSPA / EVDO / LTE / 5G\",\"SIM\":\"eSIM Only\"}"
-    },
-    {
-      "id": "ip17pm",
-      "name": "Apple iPhone 17 Pro Max",
-      "specifications": "{\"4G bands\":\"1, 2, 3, 4, 5, 7, 8, 11, 12, 13, 14, 17, 18, 19, 20, 21, 25, 26, 28, 29, 30, 32, 34, 38, 39, 40, 41, 42, 48, 53, 66, 71\",\"5G bands\":\"1, 2, 3, 5, 7, 8, 12, 14, 20, 25, 26, 28, 29, 30, 38, 40, 41, 48, 53, 66, 70, 71, 75, 77, 78, 79, 258, 260, 261 SA/NSA/Sub6/mmWave\",\"Technology\":\"GSM / CDMA / HSPA / EVDO / LTE / 5G\",\"SIM\":\"Nano-SIM and eSIM\"}"
-    },
-    {
-      "id": "ip17",
-      "name": "Apple iPhone 17",
-      "specifications": "{\"4G bands\":\"1, 2, 3, 4, 5, 7, 8, 12, 13, 14, 17, 18, 19, 20, 25, 26, 28, 29, 30, 32, 34, 38, 39, 40, 41, 42, 46, 48, 66, 71\",\"5G bands\":\"1, 2, 3, 5, 7, 8, 12, 20, 25, 26, 28, 30, 38, 40, 41, 48, 66, 70, 71, 75, 77, 78 SA/NSA/Sub6\",\"Technology\":\"GSM / CDMA / HSPA / EVDO / LTE / 5G\",\"SIM\":\"Nano-SIM and eSIM\"}"
-    },
-    {
-      "id": "s25u",
-      "name": "Samsung Galaxy S25 Ultra",
-      "specifications": "{\"4G bands\":\"1, 2, 3, 4, 5, 7, 8, 12, 13, 17, 18, 19, 20, 25, 26, 28, 32, 38, 39, 40, 41, 66, 71\",\"5G bands\":\"1, 2, 3, 5, 7, 8, 12, 20, 25, 26, 28, 38, 40, 41, 66, 71, 75, 77, 78, 257, 258, 260, 261 SA/NSA/Sub6/mmWave\",\"Technology\":\"GSM / CDMA / HSPA / EVDO / LTE / 5G\",\"SIM\":\"Nano-SIM and eSIM\"}"
-    },
-    {
-      "id": "p10p",
-      "name": "Google Pixel 10 Pro",
-      "specifications": "{\"4G bands\":\"1, 2, 3, 4, 5, 7, 8, 12, 13, 14, 17, 18, 19, 20, 25, 26, 28, 29, 30, 32, 38, 39, 40, 41, 42, 46, 48, 66, 71\",\"5G bands\":\"1, 2, 3, 5, 7, 8, 12, 14, 20, 25, 26, 28, 29, 30, 38, 40, 41, 48, 66, 70, 71, 75, 77, 78, 79, 258, 260, 261 SA/NSA/Sub6/mmWave\",\"Technology\":\"GSM / CDMA / HSPA / EVDO / LTE / 5G\",\"SIM\":\"Nano-SIM and eSIM\"}"
+      "specifications": "{\"4G bands\":\"1, 2, 3, 4, 5, 7, 8, 12, 13, 14, 17, 18, 19, 20, 25, 26, 28, 29, 30, 32, 34, 38, 39, 40, 41, 42, 48, 53, 66, 71\",\"5G bands\":\"1, 2, 3, 5, 7, 8, 12, 14, 20, 25, 26, 28, 29, 30, 38, 40, 41, 48, 53, 66, 70, 71, 75, 76, 77, 78, 79, 258, 260, 261 SA/NSA/Sub6/mmWave\",\"Technology\":\"GSM / CDMA / HSPA / EVDO / LTE / 5G\",\"SIM\":\"eSIM Only\"}"
     },
     {
       "id": "ip16p",
       "name": "Apple iPhone 16 Pro (Global)",
-      "specifications": "{\"4G bands\":\"1, 2, 3, 4, 5, 7, 8, 12, 13, 17, 18, 19, 20, 25, 26, 28, 30, 32, 34, 38, 39, 40, 41, 42, 48, 66\",\"5G bands\":\"1, 2, 3, 5, 7, 8, 12, 20, 25, 26, 28, 30, 38, 40, 41, 48, 66, 70, 71, 75, 76, 77, 78, 79 SA/NSA/Sub6\",\"Technology\":\"GSM / CDMA / HSPA / EVDO / LTE / 5G\",\"SIM\":\"Nano-SIM and eSIM\"}"
-    },
-    {
-      "id": "ip15",
-      "name": "Apple iPhone 15 (Global)",
-      "specifications": "{\"4G bands\":\"1, 2, 3, 4, 5, 7, 8, 12, 13, 17, 18, 19, 20, 25, 26, 28, 30, 32, 34, 38, 39, 40, 41, 42, 46, 48, 66\",\"5G bands\":\"1, 2, 3, 5, 7, 8, 12, 20, 25, 26, 28, 30, 38, 40, 41, 48, 66, 70, 71, 75, 76, 77, 78, 79 SA/NSA/Sub6\",\"Technology\":\"GSM / CDMA / HSPA / EVDO / LTE / 5G\",\"SIM\":\"Nano-SIM and eSIM\"}"
-    },
-    {
-      "id": "ip14",
-      "name": "Apple iPhone 14 (Global)",
-      "specifications": "{\"4G bands\":\"1, 2, 3, 4, 5, 7, 8, 12, 13, 17, 18, 19, 20, 25, 26, 28, 30, 32, 34, 38, 39, 40, 41, 42, 46, 48, 66\",\"5G bands\":\"1, 2, 3, 5, 7, 8, 12, 20, 25, 26, 28, 30, 38, 40, 41, 48, 66, 70, 71, 77, 78, 79 SA/NSA/Sub6\",\"Technology\":\"GSM / CDMA / HSPA / EVDO / LTE / 5G\",\"SIM\":\"Nano-SIM and eSIM\"}"
-    },
-    {
-      "id": "ip13",
-      "name": "Apple iPhone 13 (Global)",
-      "specifications": "{\"4G bands\":\"1, 2, 3, 4, 5, 7, 8, 12, 13, 17, 18, 19, 20, 25, 26, 28, 30, 32, 34, 38, 39, 40, 41, 42, 46, 48, 66\",\"5G bands\":\"1, 2, 3, 5, 7, 8, 12, 20, 25, 28, 30, 38, 40, 41, 48, 66, 77, 78, 79 SA/NSA/Sub6\",\"Technology\":\"GSM / CDMA / HSPA / EVDO / LTE / 5G\",\"SIM\":\"Nano-SIM and eSIM\"}"
-    },
-    {
-      "id": "ip13-us",
-      "name": "Apple iPhone 13 (USA)",
-      "specifications": "{\"4G bands\":\"1, 2, 3, 4, 5, 7, 8, 12, 13, 14, 17, 18, 19, 20, 25, 26, 28, 29, 30, 32, 34, 38, 39, 40, 41, 42, 46, 48, 66, 71\",\"5G bands\":\"1, 2, 3, 5, 7, 8, 12, 20, 25, 28, 29, 30, 38, 40, 41, 48, 66, 71, 77, 78, 79 SA/NSA/Sub6\",\"Technology\":\"GSM / CDMA / HSPA / EVDO / LTE / 5G\",\"SIM\":\"Nano-SIM and eSIM\"}"
-    },
-    {
-      "id": "ip13m",
-      "name": "Apple iPhone 13 mini",
-      "specifications": "{\"4G bands\":\"1, 2, 3, 4, 5, 7, 8, 12, 13, 17, 18, 19, 20, 25, 26, 28, 30, 32, 34, 38, 39, 40, 41, 42, 46, 48, 66\",\"5G bands\":\"1, 2, 3, 5, 7, 8, 12, 20, 25, 28, 30, 38, 40, 41, 48, 66, 77, 78, 79 SA/NSA/Sub6\",\"Technology\":\"GSM / CDMA / HSPA / EVDO / LTE / 5G\",\"SIM\":\"Nano-SIM and eSIM\"}"
-    },
-    {
-      "id": "ip12",
-      "name": "Apple iPhone 12",
-      "specifications": "{\"4G bands\":\"1, 2, 3, 4, 5, 7, 8, 12, 13, 14, 17, 18, 19, 20, 25, 26, 28, 29, 30, 32, 34, 38, 39, 40, 41, 42, 46, 48, 66, 71\",\"5G bands\":\"1, 2, 3, 5, 7, 8, 12, 20, 25, 28, 38, 40, 41, 66, 71, 77, 78, 79 SA/NSA/Sub6\",\"Technology\":\"GSM / CDMA / HSPA / EVDO / LTE / 5G\",\"SIM\":\"Nano-SIM and eSIM\"}"
-    },
-    {
-      "id": "ip11",
-      "name": "Apple iPhone 11",
-      "specifications": "{\"4G bands\":\"1, 2, 3, 4, 5, 7, 8, 11, 12, 13, 17, 18, 19, 20, 21, 25, 26, 28, 29, 30, 32, 34, 38, 39, 40, 41, 42, 46, 48, 66\",\"Technology\":\"GSM / CDMA / HSPA / EVDO / LTE\",\"SIM\":\"Nano-SIM and eSIM\"}"
-    },
-    {
-      "id": "ipx",
-      "name": "Apple iPhone X",
-      "specifications": "{\"4G bands\":\"1, 2, 3, 4, 5, 7, 8, 12, 13, 17, 18, 19, 20, 25, 26, 28, 29, 30, 34, 38, 39, 40, 41, 66\",\"Technology\":\"GSM / HSPA / LTE\"}"
+      "specifications": "{\"4G bands\":\"1, 2, 3, 4, 5, 7, 8, 12, 13, 17, 18, 19, 20, 25, 26, 28, 30, 32, 34, 38, 39, 40, 41, 42, 48, 53, 66\",\"5G bands\":\"1, 2, 3, 5, 7, 8, 12, 20, 25, 26, 28, 30, 38, 40, 41, 48, 53, 66, 70, 75, 76, 77, 78, 79 SA/NSA/Sub6\",\"Technology\":\"GSM / CDMA / HSPA / EVDO / LTE / 5G\",\"SIM\":\"Nano-SIM and eSIM\"}"
     },
     {
       "id": "s24u",
       "name": "Samsung Galaxy S24 Ultra",
-      "specifications": "{\"4G bands\":\"1, 2, 3, 4, 5, 7, 8, 12, 13, 17, 18, 19, 20, 25, 26, 28, 32, 38, 39, 40, 41, 66\",\"5G bands\":\"1, 2, 3, 5, 7, 8, 12, 20, 25, 26, 28, 38, 40, 41, 66, 75, 77, 78 SA/NSA/Sub6\",\"Technology\":\"GSM / CDMA / HSPA / EVDO / LTE / 5G\",\"SIM\":\"Nano-SIM and eSIM\"}"
-    },
-    {
-      "id": "s23u",
-      "name": "Samsung Galaxy S23 Ultra",
-      "specifications": "{\"4G bands\":\"1, 2, 3, 4, 5, 7, 8, 12, 13, 17, 18, 19, 20, 25, 26, 28, 32, 38, 39, 40, 41, 66\",\"5G bands\":\"1, 2, 3, 5, 7, 8, 12, 20, 25, 26, 28, 38, 40, 41, 66, 75, 77, 78 SA/NSA/Sub6\",\"Technology\":\"GSM / CDMA / HSPA / EVDO / LTE / 5G\",\"SIM\":\"Nano-SIM and eSIM\"}"
-    },
-    {
-      "id": "s22u",
-      "name": "Samsung Galaxy S22 Ultra 5G",
       "specifications": "{\"4G bands\":\"1, 2, 3, 4, 5, 7, 8, 12, 13, 17, 18, 19, 20, 25, 26, 28, 32, 38, 39, 40, 41, 66\",\"5G bands\":\"1, 2, 3, 5, 7, 8, 12, 20, 25, 28, 38, 40, 41, 66, 75, 77, 78 SA/NSA/Sub6\",\"Technology\":\"GSM / CDMA / HSPA / EVDO / LTE / 5G\",\"SIM\":\"Nano-SIM and eSIM\"}"
     },
     {
-      "id": "s21u",
-      "name": "Samsung Galaxy S21 Ultra 5G",
-      "specifications": "{\"4G bands\":\"1, 2, 3, 4, 5, 7, 8, 12, 13, 17, 18, 19, 20, 25, 26, 28, 32, 38, 39, 40, 41, 66\",\"5G bands\":\"1, 2, 3, 5, 7, 8, 12, 20, 25, 28, 38, 40, 41, 66, 77, 78 SA/NSA/Sub6\",\"Technology\":\"GSM / CDMA / HSPA / EVDO / LTE / 5G\",\"SIM\":\"Nano-SIM and eSIM\"}"
+      "id": "s24p",
+      "name": "Samsung Galaxy S24+",
+      "specifications": "{\"4G bands\":\"1, 2, 3, 4, 5, 7, 8, 12, 13, 17, 18, 19, 20, 25, 26, 28, 32, 38, 39, 40, 41, 66\",\"5G bands\":\"1, 2, 3, 5, 7, 8, 12, 20, 25, 28, 38, 40, 41, 66, 75, 77, 78 SA/NSA/Sub6\",\"Technology\":\"GSM / CDMA / HSPA / EVDO / LTE / 5G\",\"SIM\":\"Nano-SIM and eSIM\"}"
     },
     {
-      "id": "s20u",
-      "name": "Samsung Galaxy S20 Ultra 5G",
-      "specifications": "{\"4G bands\":\"1, 2, 3, 4, 5, 7, 8, 12, 13, 17, 18, 19, 20, 25, 26, 28, 32, 38, 39, 40, 41, 66\",\"5G bands\":\"1, 3, 5, 7, 8, 28, 40, 41, 77, 78 SA/NSA/Sub6\",\"Technology\":\"GSM / CDMA / HSPA / EVDO / LTE / 5G\",\"SIM\":\"Nano-SIM and eSIM\"}"
-    },
-    {
-      "id": "op12",
-      "name": "OnePlus 12",
-      "specifications": "{\"4G bands\":\"1, 2, 3, 4, 5, 7, 8, 12, 13, 17, 18, 19, 20, 25, 26, 28, 30, 32, 38, 39, 40, 41, 48, 66, 71\",\"5G bands\":\"1, 2, 3, 5, 7, 8, 12, 20, 25, 28, 30, 38, 40, 41, 66, 71, 75, 77, 78 SA/NSA/Sub6\",\"Technology\":\"GSM / HSPA / LTE / 5G\",\"SIM\":\"Nano-SIM and eSIM\"}"
-    },
-    {
-      "id": "op11",
-      "name": "OnePlus 11",
-      "specifications": "{\"4G bands\":\"1, 2, 3, 4, 5, 7, 8, 12, 13, 17, 18, 19, 20, 25, 26, 28, 30, 32, 38, 39, 40, 41, 48, 66, 71\",\"5G bands\":\"1, 2, 3, 5, 7, 8, 12, 20, 25, 28, 30, 38, 40, 41, 66, 71, 75, 77, 78 SA/NSA/Sub6\",\"Technology\":\"GSM / HSPA / LTE / 5G\",\"SIM\":\"Nano-SIM and eSIM\"}"
-    },
-    {
-      "id": "op10p",
-      "name": "OnePlus 10 Pro 5G",
-      "specifications": "{\"4G bands\":\"1, 2, 3, 4, 5, 7, 8, 12, 13, 17, 18, 19, 20, 25, 26, 28, 30, 32, 38, 39, 40, 41, 46, 48, 66, 71\",\"5G bands\":\"1, 2, 3, 5, 7, 8, 12, 20, 25, 28, 30, 38, 40, 41, 48, 66, 71, 77, 78 SA/NSA/Sub6\",\"Technology\":\"GSM / HSPA / LTE / 5G\",\"SIM\":\"Nano-SIM and eSIM\"}"
-    },
-    {
-      "id": "op9p",
-      "name": "OnePlus 9 Pro",
-      "specifications": "{\"4G bands\":\"1, 2, 3, 4, 5, 7, 8, 12, 13, 17, 18, 19, 20, 25, 26, 28, 30, 32, 34, 38, 39, 40, 41, 46, 48, 66, 71\",\"5G bands\":\"1, 2, 3, 5, 7, 8, 12, 20, 25, 28, 38, 40, 41, 48, 66, 71, 77, 78, 79 SA/NSA/Sub6\",\"Technology\":\"GSM / HSPA / LTE / 5G\",\"SIM\":\"Nano-SIM and eSIM\"}"
-    },
-    {
-      "id": "op8p",
-      "name": "OnePlus 8 Pro",
-      "specifications": "{\"4G bands\":\"1, 2, 3, 4, 5, 7, 8, 12, 13, 17, 18, 19, 20, 25, 26, 28, 29, 30, 32, 34, 38, 39, 40, 41, 42, 46, 48, 66, 71\",\"5G bands\":\"1, 2, 3, 5, 7, 8, 12, 20, 25, 28, 38, 40, 41, 48, 66, 71, 77, 78, 79 SA/NSA/Sub6\",\"Technology\":\"GSM / HSPA / LTE / 5G\",\"SIM\":\"Nano-SIM and eSIM\"}"
+      "id": "p9pxl",
+      "name": "Google Pixel 9 Pro XL",
+      "specifications": "{\"4G bands\":\"1, 2, 3, 4, 5, 7, 8, 12, 13, 14, 17, 18, 19, 20, 25, 26, 28, 29, 30, 32, 38, 39, 40, 41, 42, 46, 48, 66, 71\",\"5G bands\":\"1, 2, 3, 5, 7, 8, 12, 14, 20, 25, 26, 28, 29, 30, 38, 40, 41, 48, 66, 70, 71, 75, 77, 78, 79, 258, 260, 261 SA/NSA/Sub6/mmWave\",\"Technology\":\"GSM / CDMA / HSPA / EVDO / LTE / 5G\",\"SIM\":\"Nano-SIM and eSIM\"}"
     },
     {
       "id": "p9p",
       "name": "Google Pixel 9 Pro",
-      "specifications": "{\"4G bands\":\"1, 2, 3, 4, 5, 7, 8, 12, 13, 14, 17, 18, 19, 20, 21, 25, 26, 28, 29, 30, 32, 38, 39, 40, 41, 42, 48, 66, 71\",\"5G bands\":\"1, 2, 3, 5, 7, 8, 12, 14, 20, 25, 26, 28, 29, 30, 38, 40, 41, 48, 66, 71, 75, 76, 77, 78, 79 SA/NSA/Sub6\",\"Technology\":\"GSM / CDMA / HSPA / EVDO / LTE / 5G\",\"SIM\":\"Nano-SIM and eSIM\"}"
+      "specifications": "{\"4G bands\":\"1, 2, 3, 4, 5, 7, 8, 12, 13, 14, 17, 18, 19, 20, 25, 26, 28, 29, 30, 32, 38, 39, 40, 41, 42, 46, 48, 66, 71\",\"5G bands\":\"1, 2, 3, 5, 7, 8, 12, 14, 20, 25, 26, 28, 29, 30, 38, 40, 41, 48, 66, 70, 71, 75, 77, 78, 79, 258, 260, 261 SA/NSA/Sub6/mmWave\",\"Technology\":\"GSM / CDMA / HSPA / EVDO / LTE / 5G\",\"SIM\":\"Nano-SIM and eSIM\"}"
     },
     {
-      "id": "p8p",
-      "name": "Google Pixel 8 Pro",
-      "specifications": "{\"4G bands\":\"1, 2, 3, 4, 5, 7, 8, 12, 13, 14, 17, 18, 19, 20, 25, 26, 28, 29, 30, 32, 38, 39, 40, 41, 42, 46, 48, 66, 71\",\"5G bands\":\"1, 2, 3, 5, 7, 8, 12, 14, 20, 25, 26, 28, 29, 30, 38, 40, 41, 48, 66, 71, 77, 78 SA/NSA/Sub6\",\"Technology\":\"GSM / CDMA / HSPA / EVDO / LTE / 5G\",\"SIM\":\"Nano-SIM and eSIM\"}"
+      "id": "p9",
+      "name": "Google Pixel 9",
+      "specifications": "{\"4G bands\":\"1, 2, 3, 4, 5, 7, 8, 12, 13, 14, 17, 18, 19, 20, 25, 26, 28, 29, 30, 32, 38, 39, 40, 41, 42, 46, 48, 66, 71\",\"5G bands\":\"1, 2, 3, 5, 7, 8, 12, 14, 20, 25, 26, 28, 29, 30, 38, 40, 41, 48, 66, 70, 71, 75, 77, 78, 79, 258, 260, 261 SA/NSA/Sub6/mmWave\",\"Technology\":\"GSM / CDMA / HSPA / EVDO / LTE / 5G\",\"SIM\":\"Nano-SIM and eSIM\"}"
     },
     {
-      "id": "p7p",
-      "name": "Google Pixel 7 Pro",
-      "specifications": "{\"4G bands\":\"1, 2, 3, 4, 5, 7, 8, 12, 13, 14, 17, 18, 19, 20, 25, 26, 28, 29, 30, 32, 38, 39, 40, 41, 42, 46, 48, 66, 71\",\"5G bands\":\"1, 2, 3, 5, 7, 8, 12, 14, 20, 25, 26, 28, 29, 30, 38, 40, 41, 48, 66, 71, 77, 78 SA/NSA/Sub6\",\"Technology\":\"GSM / CDMA / HSPA / EVDO / LTE / 5G\",\"SIM\":\"Nano-SIM and eSIM\"}"
+      "id": "op12",
+      "name": "OnePlus 12",
+      "specifications": "{\"4G bands\":\"1, 2, 3, 4, 5, 7, 8, 12, 17, 18, 19, 20, 26, 28, 32, 38, 39, 40, 41, 48, 66\",\"5G bands\":\"1, 2, 3, 5, 7, 8, 12, 20, 25, 28, 30, 38, 40, 41, 66, 71, 77, 78 SA/NSA\",\"Technology\":\"GSM / HSPA / LTE / 5G\",\"SIM\":\"Nano-SIM and eSIM\"}"
     },
     {
-      "id": "thu-x5t",
-      "name": "Thuraya X5-Touch",
-      "specifications": "{\"4G bands\":\"1, 3, 5, 7, 8, 20, 40, 41\",\"Technology\":\"GSM / HSPA / LTE / Satellite (Thuraya L-Band)\",\"SIM\":\"Nano-SIM and Satellite\"}"
+      "id": "op11",
+      "name": "OnePlus 11",
+      "specifications": "{\"4G bands\":\"1, 2, 3, 4, 5, 7, 8, 12, 13, 17, 18, 19, 20, 25, 26, 28, 32, 38, 39, 41, 46, 48, 66\",\"5G bands\":\"1, 2, 3, 5, 7, 8, 20, 25, 28, 30, 38, 40, 41, 66, 71, 77, 78 SA/NSA\",\"Technology\":\"GSM / HSPA / LTE / 5G\",\"SIM\":\"Nano-SIM and eSIM\"}"
     },
     {
-      "id": "thu-xtpd",
-      "name": "Thuraya XT-PRO DUAL",
-      "specifications": "{\"4G bands\":\"1, 3, 7, 8, 20, 28\",\"Technology\":\"GSM / HSPA / LTE / Satellite (Thuraya L-Band)\",\"SIM\":\"Mini-SIM (Satellite) and Micro-SIM (GSM)\"}"
-    },
-    {
-      "id": "thu-xtl",
-      "name": "Thuraya XT-LITE",
-      "specifications": "{\"Technology\":\"Satellite Only (Thuraya L-Band)\",\"SIM\":\"Mini-SIM (Satellite)\"}"
-    },
-    {
-      "id": "thu-xtp",
-      "name": "Thuraya XT-PRO",
-      "specifications": "{\"Technology\":\"Satellite Only (Thuraya L-Band)\",\"SIM\":\"Mini-SIM (Satellite)\"}"
+      "id": "op10p",
+      "name": "OnePlus 10 Pro",
+      "specifications": "{\"4G bands\":\"1, 2, 3, 4, 5, 7, 8, 12, 13, 17, 18, 19, 20, 25, 26, 28, 30, 32, 38, 39, 40, 41, 46, 48, 66, 71\",\"5G bands\":\"1, 2, 3, 5, 7, 8, 20, 25, 28, 30, 38, 40, 41, 48, 66, 71, 77, 78 SA/NSA\",\"Technology\":\"GSM / CDMA / HSPA / EVDO / LTE / 5G\",\"SIM\":\"Nano-SIM\"}"
     },
     {
       "id": "mi13p",
       "name": "Xiaomi 13 Pro",
-      "specifications": "{\"4G bands\":\"1, 2, 3, 4, 5, 7, 8, 12, 13, 17, 18, 19, 20, 25, 26, 28, 32, 38, 39, 40, 41, 42, 48, 66\",\"5G bands\":\"1, 3, 5, 7, 8, 20, 28, 38, 40, 41, 66, 71, 75, 77, 78 SA/NSA\",\"Technology\":\"GSM / HSPA / LTE / 5G\",\"SIM\":\"Nano-SIM and eSIM\"}"
+      "specifications": "{\"4G bands\":\"1, 2, 3, 4, 5, 7, 8, 12, 17, 18, 19, 20, 26, 28, 38, 39, 40, 41, 42, 48, 66\",\"5G bands\":\"1, 3, 5, 7, 8, 20, 28, 38, 40, 41, 66, 71, 75, 77, 78, 79 SA/NSA\",\"Technology\":\"GSM / CDMA / HSPA / EVDO / LTE / 5G\",\"SIM\":\"Nano-SIM and eSIM\"}"
     },
     {
-      "id": "moto-rzr40u",
+      "id": "moto-r40u",
       "name": "Motorola Razr 40 Ultra",
-      "specifications": "{\"4G bands\":\"1, 2, 3, 4, 5, 7, 8, 12, 13, 17, 18, 19, 20, 25, 26, 28, 32, 34, 38, 39, 40, 41, 42, 43, 48, 66\",\"5G bands\":\"1, 3, 5, 7, 8, 20, 28, 38, 41, 66, 77, 78, 79 SA/NSA\",\"Technology\":\"GSM / HSPA / LTE / 5G\",\"SIM\":\"Nano-SIM and eSIM\"}"
+      "specifications": "{\"4G bands\":\"1, 2, 3, 4, 5, 7, 8, 12, 13, 17, 18, 19, 20, 25, 26, 28, 32, 34, 38, 39, 40, 41, 42, 46, 48, 66\",\"5G bands\":\"1, 3, 5, 7, 8, 20, 28, 38, 41, 66, 77, 78, 79 SA/NSA\",\"Technology\":\"GSM / CDMA / HSPA / EVDO / LTE / 5G\",\"SIM\":\"Nano-SIM and eSIM\"}"
     },
     {
-      "id": "thu-ss-plus",
-      "name": "Thuraya SatSleeve+",
-      "specifications": "{\"4G bands\":\"1, 3, 5, 7, 8, 20, 40, 41\",\"Technology\":\"GSM / HSPA / LTE / Satellite (Thuraya L-Band)\",\"SIM\":\"Mini-SIM (Satellite) or GSM SIM\"}"
-    },
-    {
-      "id": "thu-ss-hot",
-      "name": "Thuraya SatSleeve Hotspot",
-      "specifications": "{\"4G bands\":\"1, 3, 5, 7, 8, 20, 40, 41\",\"Technology\":\"GSM / HSPA / LTE / Satellite (Thuraya L-Band)\",\"SIM\":\"Mini-SIM (Satellite) or GSM SIM\"}"
-    },
-    {
-      "id": "oppo-x7u",
-      "name": "Oppo Find X7 Ultra",
-      "specifications": "{\"4G bands\":\"1, 2, 3, 4, 5, 7, 8, 12, 17, 18, 19, 20, 26, 28, 34, 38, 39, 40, 41, 66\",\"5G bands\":\"1, 3, 5, 7, 8, 20, 28, 38, 40, 41, 66, 77, 78, 79 SA/NSA\",\"Technology\":\"GSM / HSPA / LTE / 5G\",\"SIM\":\"Nano-SIM and eSIM\"}"
-    },
-    {
-      "id": "vivo-x100p",
-      "name": "Vivo X100 Pro",
-      "specifications": "{\"4G bands\":\"1, 2, 3, 4, 5, 7, 8, 12, 17, 18, 19, 20, 26, 28, 32, 66\",\"5G bands\":\"1, 3, 5, 7, 8, 20, 28, 38, 40, 41, 66, 75, 77, 78, 79 SA/NSA\",\"Technology\":\"GSM / HSPA / LTE / 5G\",\"SIM\":\"Nano-SIM and eSIM\"}"
-    },
-    {
-      "id": "honor-m6p",
-      "name": "Honor Magic 6 Pro",
-      "specifications": "{\"4G bands\":\"1, 2, 3, 4, 5, 7, 8, 12, 13, 17, 18, 19, 20, 25, 26, 28, 30, 32, 66, 71\",\"5G bands\":\"1, 2, 3, 5, 7, 8, 12, 20, 25, 28, 38, 40, 41, 66, 71, 77, 78, 79 SA/NSA\",\"Technology\":\"GSM / HSPA / LTE / 5G\",\"SIM\":\"Nano-SIM and eSIM\"}"
-    },
-    {
-      "id": "s20p",
-      "name": "Samsung Galaxy S20+",
-      "specifications": "{\"4G bands\":\"1, 2, 3, 4, 5, 7, 8, 12, 13, 17, 18, 19, 20, 25, 26, 28, 32, 38, 39, 40, 41, 66\",\"5G bands\":\"1, 3, 5, 7, 8, 28, 40, 77, 78 SA/NSA/Sub6\",\"Technology\":\"GSM / CDMA / HSPA / EVDO / LTE / 5G\",\"SIM\":\"Nano-SIM and eSIM\"}"
-    },
-    {
-      "id": "a12",
-      "name": "Samsung Galaxy A12",
-      "specifications": "{\"4G bands\":\"1, 3, 5, 7, 8, 20, 28, 38, 40, 41\",\"Technology\":\"GSM / HSPA / LTE\",\"SIM\":\"Nano-SIM\"}"
-    },
-    {
-      "id": "ipxs",
-      "name": "Apple iPhone XS",
-      "specifications": "{\"4G bands\":\"1, 2, 3, 4, 5, 7, 8, 12, 13, 14, 17, 18, 19, 20, 25, 26, 29, 30, 32, 34, 38, 39, 40, 41, 66, 71\",\"Technology\":\"GSM / CDMA / HSPA / EVDO / LTE\",\"SIM\":\"Nano-SIM and eSIM\"}"
-    },
-    {
-      "id": "ipxsmax",
-      "name": "Apple iPhone XS Max",
-      "specifications": "{\"4G bands\":\"1, 2, 3, 4, 5, 7, 8, 12, 13, 14, 17, 18, 19, 20, 25, 26, 29, 30, 32, 34, 38, 39, 40, 41, 66, 71\",\"Technology\":\"GSM / CDMA / HSPA / EVDO / LTE\",\"SIM\":\"Nano-SIM and eSIM\"}"
-    },
-    {
-      "id": "ipxr",
-      "name": "Apple iPhone XR",
-      "specifications": "{\"4G bands\":\"1, 2, 3, 4, 5, 7, 8, 12, 13, 14, 17, 18, 19, 20, 25, 26, 29, 30, 32, 34, 38, 39, 40, 41, 66, 71\",\"Technology\":\"GSM / CDMA / HSPA / EVDO / LTE\",\"SIM\":\"Nano-SIM and eSIM\"}"
+      "id": "thu-x5t",
+      "name": "Thuraya X5-Touch",
+      "specifications": "{\"4G bands\":\"1, 3, 5, 7, 8, 20, 40, 41\",\"Technology\":\"GSM / HSPA / LTE / Satellite (Thuraya L-Band)\",\"SIM\":\"Mini-SIM (Satellite) + Nano-SIM (GSM)\"}"
     }
   ]
 }

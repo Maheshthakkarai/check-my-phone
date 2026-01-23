@@ -100,20 +100,44 @@ export default function CheckPhoneApp() {
             const tac = imeiInput.substring(0, 8);
             const genericName = tacDatabase[tac];
             if (genericName) {
-                // We create a temporary "Virtual" device for compatibility checking
-                // If it's in Osmocom, we know the name, but we might not have the bands
-                // Let's see if we can find a matching device by name in our full database
-                const existingMatch = devices.find(d =>
-                    d.name.toLowerCase().includes(genericName.toLowerCase()) ||
-                    genericName.toLowerCase().includes(d.name.toLowerCase())
+                const gn = genericName.toLowerCase();
+                const gnClean = gn.replace(/[^a-z0-9\s]/g, ' ');
+
+                // Try strict match first
+                let existingMatch = devices.find(d =>
+                    d.name.toLowerCase() === gn ||
+                    gn.includes(d.name.toLowerCase()) ||
+                    d.name.toLowerCase().includes(gn)
                 );
+
+                // Fallback to word-based matching if no strict match
+                if (!existingMatch) {
+                    const words = gnClean.split(/\s+/).filter(w => w.length > 2 && w !== 'apple' && w !== 'samsung' && w !== 'google');
+                    const brand = gn.split(/\s+/)[0];
+
+                    if (words.length > 0) {
+                        const candidates = devices
+                            .filter(d => d.name.toLowerCase().includes(brand))
+                            .map(d => {
+                                const dName = d.name.toLowerCase();
+                                const score = words.filter(word => dName.includes(word)).length;
+                                return { device: d, score };
+                            })
+                            .filter(m => m.score > 0)
+                            .sort((a, b) => b.score - a.score);
+
+                        if (candidates.length > 0 && candidates[0].score >= 1) {
+                            existingMatch = candidates[0].device;
+                        }
+                    }
+                }
 
                 if (existingMatch) {
                     setSelectedDevice(existingMatch);
                     setImeiError(`Detected: ${genericName}`);
                 } else {
                     setSelectedDevice(null);
-                    setImeiError(`Recognized as ${genericName}, but network specs are missing from our database.`);
+                    setImeiError(`Recognized: ${genericName}. Specs not found in current database.`);
                 }
             } else {
                 setSelectedDevice(null);
@@ -501,13 +525,40 @@ Check your phone at: check-my-phone.vercel.app`;
                                     />
                                 </div>
                                 {imeiError && (
-                                    <motion.p
-                                        initial={{ opacity: 0, y: -5 }}
-                                        animate={{ opacity: 1, y: 0 }}
-                                        className="text-red-400 text-xs px-2 flex items-center gap-2"
-                                    >
-                                        <XCircle className="w-3 h-3" /> {imeiError}
-                                    </motion.p>
+                                    <div className="space-y-2">
+                                        <motion.p
+                                            initial={{ opacity: 0, y: -5 }}
+                                            animate={{ opacity: 1, y: 0 }}
+                                            className={`text-xs px-2 py-2 rounded-xl flex items-center gap-2 ${imeiError.includes('Detected') || imeiError.includes('Recognized')
+                                                    ? 'bg-blue-500/10 text-blue-400 border border-blue-500/20'
+                                                    : 'bg-red-500/10 text-red-400 border border-red-500/20'
+                                                }`}
+                                        >
+                                            {imeiError.includes('Detected') || imeiError.includes('Recognized') ? (
+                                                <Search className="w-3.5 h-3.5 shrink-0" />
+                                            ) : (
+                                                <XCircle className="w-3.5 h-3.5 shrink-0" />
+                                            )}
+                                            <span className="flex-1">{imeiError}</span>
+                                        </motion.p>
+
+                                        {imeiError.includes('Specs not found') && (
+                                            <motion.button
+                                                initial={{ opacity: 0 }}
+                                                animate={{ opacity: 1 }}
+                                                onClick={() => {
+                                                    const match = imeiError.match(/Recognized: (.*)\. Specs/);
+                                                    if (match && match[1]) {
+                                                        setSelectionMethod('manual');
+                                                        setDeviceSearch(match[1]);
+                                                    }
+                                                }}
+                                                className="w-full py-2.5 text-[10px] font-bold text-white bg-blue-600 hover:bg-blue-500 rounded-xl transition-all flex items-center justify-center gap-2 uppercase tracking-widest shadow-lg shadow-blue-600/20"
+                                            >
+                                                <Search className="w-3.5 h-3.5" /> Search database for this model
+                                            </motion.button>
+                                        )}
+                                    </div>
                                 )}
                                 {!selectedDevice && !imeiError && (
                                     <p className="text-slate-500 text-[10px] md:text-xs px-2 leading-relaxed">
